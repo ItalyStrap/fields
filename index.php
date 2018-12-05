@@ -31,16 +31,11 @@ Domain Path: Domain Path
 
 require( __DIR__ . '/vendor/autoload.php' );
 
-/**
- * debug_example
- */
-// function debug_example() {
+function fields_example() {
 
-//     debug( 'Example' );
-//     debug( ['key' => 'value'] );
-//     d( 'Example' );
-//     d(  ['key' => 'value']  );
+    $fields = new \ItalyStrap\Fields\Fields();
+    debug( $fields );
 
-// }
+}
 
-// add_action( 'wp_footer', 'debug_example' );
+add_action( 'wp_footer', 'fields_example' );
