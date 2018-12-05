@@ -34,7 +34,7 @@ require( __DIR__ . '/vendor/autoload.php' );
 function fields_example() {
 
     $fields = new \ItalyStrap\Fields\Fields();
-    debug( $fields );
+    d( $fields );
 
 }
 
