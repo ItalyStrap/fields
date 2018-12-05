@@ -4,8 +4,8 @@
  *
  * Idea: https://github.com/Chrico/wp-fields
  *
+ * @version 1.0.0
  * @package ItalyStrap
- * @since 2.0.0
  */
 
 namespace ItalyStrap\Fields;
