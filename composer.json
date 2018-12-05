@@ -1,0 +1,23 @@
+{
+    "name": "italystrap/fields",
+    "description": "Classes and functions for handling fields",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "overclokk",
+            "email": "info@overclokk.net"
+        }
+    ],
+    "require": {
+        "php" : ">=5.3"
+    },
+    "require-dev": {
+        "lucatume/wp-browser": "~2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "ItalyStrap\\Fields\\": "src/Fields/"
+        }
+    },
+    "minimum-stability": "stable"
+}
