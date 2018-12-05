@@ -119,7 +119,8 @@ abstract class Fields_Base implements Fields_Interface {
 		 *
 		 * @var string
 		 */
-		$field_method = 'field_type_' . str_replace( '-', '_', $key['type'] );
+		// $field_method = 'field_type_' . str_replace( '-', '_', $key['type'] );
+		$field_method = $key['type'];
 
 		/**
 		 * Set Defaults
@@ -167,7 +168,6 @@ abstract class Fields_Base implements Fields_Interface {
 		);
 
 		return $output;
-	
 	}
 
 	/**

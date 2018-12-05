@@ -27,11 +27,11 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function field_type_text( array $key, $out = '' ) {
+	public function text( array $key, $out = '' ) {
 
 		$attr = array();
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -42,14 +42,14 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function field_type_hidden( array $key, $out = '' ) {
+	public function hidden( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'hidden',
 			'desc'	=> '',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -60,13 +60,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML field number
 	 */
-	public function field_type_number( array $key, $out = '' ) {
+	public function number( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'number',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -77,13 +77,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML field email
 	 */
-	public function field_type_email( array $key, $out = '' ) {
+	public function email( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'email',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -94,13 +94,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML field url
 	 */
-	public function field_type_url( array $key, $out = '' ) {
+	public function url( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'url',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -111,13 +111,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML field tel
 	 */
-	public function field_type_tel( array $key, $out = '' ) {
+	public function tel( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'tel',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -128,13 +128,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML field file
 	 */
-	public function field_type_file( array $key, $out = '' ) {
+	public function file( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'file',
 		);
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -146,13 +146,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function field_type_media( array $key, $out = '' ) {
+	public function media( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'text',
 		);
 
-		$out = $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 
 		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
 
@@ -188,13 +188,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function field_type_media_list( array $key, $out = '' ) {
+	public function media_list( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'text',
 		);
 
-		$out = $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 
 		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
 
@@ -235,13 +235,13 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function field_type_media_list_old( array $key, $out = '' ) {
+	public function media_list_old( array $key, $out = '' ) {
 
 		$attr = array(
 			'type'	=> 'text',
 		);
 
-		$out = $this->field_type_label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 
 		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
 
@@ -303,8 +303,8 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Textarea
 	 */
-	public function field_type_textarea( array $key, $out = '' ) {
-		$out .= $this->field_type_label( $key['name'], $key['_id'] );
+	public function textarea( array $key, $out = '' ) {
+		$out .= $this->label( $key['name'], $key['_id'] );
 
 		$out .= '<textarea ';
 
@@ -328,7 +328,7 @@ class Fields extends Fields_Base {
 		$out .= '</textarea>';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}
@@ -341,7 +341,7 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Checkbox
 	 */
-	public function field_type_checkbox( array $key, $out = '' ) {
+	public function checkbox( array $key, $out = '' ) {
 
 		$out .= ' <input type="checkbox" ';
 
@@ -370,10 +370,10 @@ class Fields extends Fields_Base {
 
 		$out .= ' /> ';
 
-		$out .= $this->field_type_label( $key['name'], $key['_id'], false );
+		$out .= $this->label( $key['name'], $key['_id'], false );
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] );
+			$out .= $this->description( $key['desc'] );
 		}
 
 		return $out;
@@ -387,9 +387,9 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Select
 	 */
-	public function field_type_select( array $key, $out = '' ) {
+	public function select( array $key, $out = '' ) {
 
-		$out .= $this->field_type_label( $key['name'], $key['_id'] );
+		$out .= $this->label( $key['name'], $key['_id'] );
 
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 
@@ -425,7 +425,7 @@ class Fields extends Fields_Base {
 		$out .= ' </select> ';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}
@@ -438,9 +438,9 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Select
 	 */
-	public function field_type_multiple_select( array $key, $out = '' ) {
+	public function multiple_select( array $key, $out = '' ) {
 
-		$out .= $this->field_type_label( $key['name'], $key['_id'] );
+		$out .= $this->label( $key['name'], $key['_id'] );
 
 		// $out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '[]" ';
@@ -475,7 +475,7 @@ class Fields extends Fields_Base {
 		$out .= ' </select> ';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}
@@ -488,9 +488,9 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Select
 	 */
-	public function field_type_taxonomy_multiple_select( array $key, $out = '' ) {
+	public function taxonomy_multiple_select( array $key, $out = '' ) {
 
-		$out .= $this->field_type_label( $key['name'], $key['_id'] );
+		$out .= $this->label( $key['name'], $key['_id'] );
 
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '[]" ';
 
@@ -528,7 +528,7 @@ class Fields extends Fields_Base {
 		$out .= ' </select> ';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}
@@ -541,9 +541,9 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Select with Options Group
 	 */
-	public function field_type_select_group( array $key, $out = '' ) {
+	public function select_group( array $key, $out = '' ) {
 
-		$out .= $this->field_type_label( $key['name'], $key['_id'] );
+		$out .= $this->label( $key['name'], $key['_id'] );
 
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 
@@ -582,7 +582,7 @@ class Fields extends Fields_Base {
 		$out .= '</select>';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->field_type_description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}
@@ -595,7 +595,7 @@ class Fields extends Fields_Base {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Editor
 	 */
-	public function field_type_editor( array $key, $out = '' ) {
+	public function editor( array $key, $out = '' ) {
 
 		$attr = array();
 
@@ -616,7 +616,7 @@ class Fields extends Fields_Base {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		return $this->field_type_label( $key['name'], $key['_id'] ) . $output;
+		return $this->label( $key['name'], $key['_id'] ) . $output;
 	}
 
 	/**
@@ -628,7 +628,7 @@ class Fields extends Fields_Base {
 	 *
 	 * @return string      Return the HTML field image_size
 	 */
-	public function field_type_group( array $key, $out = '' ) {
+	public function group( array $key, $out = '' ) {
 
 		foreach ( $key['group_field'] as $field ) {
 
@@ -639,17 +639,17 @@ class Fields extends Fields_Base {
 			 *
 			 * @var string
 			 */
-			$field_method = 'field_type_' . str_replace( '-', '_', $field['type'] );
+			$field_method = '' . str_replace( '-', '_', $field['type'] );
 
 			$attr['type'] = $field['type'];
 
-			// $out .= method_exists( $this, $field_method ) ? $this->$field_method( $field ) : $this->field_type_text( $field );
-			$out .= method_exists( $this, $field_method ) ? $this->$field_method( $field ) : $this->field_type_text( $field );
+			// $out .= method_exists( $this, $field_method ) ? $this->$field_method( $field ) : $this->text( $field );
+			$out .= method_exists( $this, $field_method ) ? $this->$field_method( $field ) : $this->text( $field );
 		}
 
 		return sprintf(
 			'%1$s %2$s',
-			$this->field_type_label( $key['name'], $key['_id'] ),
+			$this->label( $key['name'], $key['_id'] ),
 			$out
 		);
 	}
@@ -662,7 +662,7 @@ class Fields extends Fields_Base {
 	 *
 	 * @return string       Return the description
 	 */
-	public function field_type_description( $desc ) {
+	public function description( $desc ) {
 
 		if ( empty( $desc ) ) {
 			return '';
@@ -684,7 +684,7 @@ class Fields extends Fields_Base {
 	 *
 	 * @return string       Return the labels
 	 */
-	public function field_type_label( $name = '', $id = '', $br = true ) {
+	public function label( $name = '', $id = '', $br = true ) {
 
 		if ( empty( $name ) ) {
 			return '';
