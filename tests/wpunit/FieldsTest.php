@@ -27,18 +27,18 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $this->dom = new \DOMDocument();
 
         $this->test_type_text = array(
-                'name'      => __( 'Widget Class', 'italystrap' ),
-                'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
-                'id'        => 'widget_class',
-                '_id'       => 'widget_class',
-                '_name'     => 'widget_class',
-                'type'      => 'text',
-                'class'     => 'widefat widget_class',
-                'placeholder'     => 'widefat widget_class',
-                'default'   => true,
-                'value'     => 'general',
-                'size'      => '',
-                 );
+            'name'      => __( 'Widget Class', 'italystrap' ),
+            'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
+            'id'        => 'widget_class',
+            '_id'       => 'widget_class',
+            '_name'     => 'widget_class',
+            'type'      => 'text',
+            'class'     => 'widefat widget_class',
+            'placeholder'     => 'widefat widget_class',
+            'default'   => true,
+            'value'     => 'general',
+            'size'      => '',
+        );
 
         $this->test_type_hidden = array(
                 'name'      => __( 'Widget Class', 'italystrap' ),
@@ -110,49 +110,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     }
 
     private function make_instance() {
-
-        $sut = new Fields();
-
-        return $sut;
-    }
-
-    /**
-     * @test
-     * it should be instantiatable
-     */
-    public function it_should_be_instantiatable()
-    {
-
-        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields', $this->make_instance() );
-        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields_Interface', $this->make_instance() );
-    }
-
-    /**
-     * @test
-     * it_should_be_an_object
-     */
-    public function it_should_be_an_object() {
-        $this->assertTrue( is_object( $this->make_instance() ) );
-    }
-
-    /**
-     * @test
-     * it_should_be_show
-     */
-    public function it_should_be_show() {
-        $sut = $this->make_instance();
-        $key[ 'show_on_cb' ] = '__return_true';
-        $this->assertTrue( $sut->should_show( $key ) );
-    }
-
-    /**
-     * @test
-     * it_should_be_hide
-     */
-    public function it_should_be_hide() {
-        $sut = $this->make_instance();
-        $key[ 'show_on_cb' ] = '__return_false';
-        $this->assertTrue( ! $sut->should_show( $key ) );
+        return new Fields();
     }
 
     /**
@@ -164,15 +122,85 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     }
 
     /**
+     * @test
+     * it should be instantiatable
+     */
+    public function it_should_be_instantiatable()
+    {
+        $sut = $this->make_instance();
+
+        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields', $sut );
+        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields_Interface', $sut );
+    }
+
+    /**
+     * @test
+     * it_should_be_shown
+     */
+    public function it_should_be_shown() {
+
+        $sut = $this->make_instance();
+
+        // Test callback
+        $key[ 'show_on_cb' ] = '__return_true';
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        // Test boolean
+        $key[ 'show_on_cb' ] = true;
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = 'true';
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = 1;
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = '1';
+        $this->assertTrue( $sut->should_show( $key ) );
+    }
+
+    /**
+     * @test
+     * it_should_be_hidden
+     */
+    public function it_should_be_hidden() {
+
+        $sut = $this->make_instance();
+        $key[ 'show_on_cb' ] = '__return_false';
+        $this->assertFalse( $sut->should_show( $key ) );
+
+        // Test boolean
+        $key[ 'show_on_cb' ] = false;
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = 'false';
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = 0;
+        $this->assertTrue( $sut->should_show( $key ) );
+
+        $key[ 'show_on_cb' ] = '0';
+        $this->assertTrue( $sut->should_show( $key ) );
+    }
+
+    /**
      * Get fields_type output
      */
     public function get_fields_input_output( $type = 'text', $tag = 'input' ) {
 
         $sut = $this->make_instance();
-
-        $fields_type = $tag;
     
-        $out = $sut->$fields_type( array(), array( '_name' => true, '_id' => 'widget_class', 'default' => true, 'placeholder' => true, 'size' => true, 'desc' => true ) );
+        $out = $sut->$tag(
+            [],
+            [
+                '_name'         => true,
+                '_id'           => 'widget_class',
+                'default'       => true,
+                'placeholder'   => true,
+                'size'          => true,
+                'desc'          => true,
+            ]
+        );
 
         $this->dom->loadHTML( $out );
 
@@ -200,16 +228,16 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
     /**
      * @test
-     * input should have proper attributes
+     * it should have proper attributes
      * @dataProvider  input_types_and_attributes_provider
      */
-    // public function input_should_have_proper_attributes( $type, $attr ) {
+    public function it_should_have_proper_attributes( $type, $attr ) {
 
-    //     $element = $this->get_fields_input_output( $type );
+        $element = $this->get_fields_input_output( $type );
 
-    //     $this->assertNotEmpty( $element->getAttribute( $attr ), "Attribute $attr is empty for type $type" );
+        $this->assertNotEmpty( $element->getAttribute( $attr ), "Attribute $attr is empty for type $type" );
 
-    // }
+    }
 
     /**
      * @test

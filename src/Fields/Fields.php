@@ -10,46 +10,13 @@
 
 namespace ItalyStrap\Fields;
 
+use ItalyStrap\HTML;
 use InvalidArgumentException;
 
 /**
  * Class for make field type
  */
 class Fields implements Fields_Interface {
-
-	/**
-	 * Determine whether this field should show, based on the 'show_on_cb' callback.
-	 * Forked from CMB2
-	 * @see CMB2_Field.php
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param  array $key      The array with field arguments.
-	 *
-	 * @return bool Whether the field should be shown.
-	 */
-	public function should_show( $key ) {
-		
-		/**
-		 * Default. Show the field
-		 *
-		 * @var bool
-		 */
-		$show = true;
-
-		if ( ! isset( $key[ 'show_on_cb' ] ) ) {
-			return $show;
-		}
-
-		/**
-		 * Use the callback to determine showing the field, if it exists
-		 */
-		if ( is_callable( $key[ 'show_on_cb' ] ) ) {
-			$show = call_user_func( $key[ 'show_on_cb' ], $this );
-		}
-
-		return (bool) $show;
-	}
 
 	/**
 	 * Set _id _name attributes
@@ -91,12 +58,16 @@ class Fields implements Fields_Interface {
 	 */
 	public function get_field_type( array $key, array $instance ) {
 
+		$default = [
+			'type'	=> 'text',
+		];
+
 		if ( ! isset( $key['_id'] ) ) {
-			throw new InvalidArgumentException( __( 'The _id key is not set', 'italystrap' ) );
+			$key['_id'] = $key['id'];
 		}
 
 		if ( ! isset( $key['_name'] ) ) {
-			throw new InvalidArgumentException( __( 'The _name key is not set', 'italystrap' ) );
+			$key['_name'] = trim( strtolower( str_replace( ' ', '', $key['name'] ) ) );
 		}
 
 		/**
@@ -119,7 +90,7 @@ class Fields implements Fields_Interface {
 		 * @var string
 		 */
 		// $field_method = 'field_type_' . str_replace( '-', '_', $key['type'] );
-		$field_method = $key['type'];
+		$field_method = str_replace( '-', '_', $key['type'] );
 
 		/**
 		 * Set Defaults
@@ -163,33 +134,49 @@ class Fields implements Fields_Interface {
 		$output = sprintf(
 			'<p%1$s>%2$s</p>',
 			$p_class,
-			method_exists( $this, $field_method ) ? $this->$field_method( $key ) : $this->field_type_text( $key )
+			method_exists( $this, $field_method ) ? $this->$field_method( $key ) : $this->text( $key )
 		);
 
 		return $output;
 	}
 
 	/**
-	 * Combines attributes into a string for a form element
+	 * Create the field label
 	 *
-	 * @since  2.0.0
-	 * @param  array $attrs        Attributes to concatenate.
-	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
+	 * @param  string $label The labels name.
+	 * @param  string $id    The labels ID.
+	 * @param  bool   $br    The labels ID.
 	 *
-	 * @return string               String of attributes for form element
+	 * @return string       Return the labels
 	 */
-	public function concat_attrs( $attrs, $attr_exclude = array() ) {
-		$attributes = '';
-		foreach ( $attrs as $attr => $val ) {
-			$excluded = in_array( $attr, (array) $attr_exclude, true );
-			$empty    = false === $val && 'value' !== $attr;
-			if ( ! $excluded && ! $empty ) {
-				// If data attribute, use single quote wraps, else double.
-				$quotes = stripos( $attr, 'data-' ) !== false ? "'" : '"';
-				$attributes .= sprintf( ' %1$s=%3$s%2$s%3$s', $attr, $val, $quotes );
-			}
+	public function label( $label = '', $id = '', $br = true ) {
+
+		if ( empty( $label ) ) {
+			return '';
 		}
-		return $attributes;
+
+		return sprintf(
+			'<label%s>%s</label>%s',
+			HTML\get_attr( $id, [ 'for' => $id ] ),
+			esc_html( $label ),
+			$br ? '<br/>' : ''
+		);
+	}
+
+	/**
+	 * Create the Field Text
+	 *
+	 * @access public
+	 * @param  array  $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 *
+	 * @return string      Return the HTML Field Text
+	 */
+	public function text( array $key ) {
+
+		$attr = [];
+
+		return $this->label( $key['name'], $key['id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -215,7 +202,7 @@ class Fields implements Fields_Interface {
 			'name'				=> esc_attr( $key['_name'] ),
 			'id'				=> esc_attr( $key['_id'] ),
 			'value'				=> isset( $key['value'] ) ? esc_attr( $key['value'] ) : ( isset( $key['default'] ) ? esc_attr( $key['default'] ) : '' ),
-			'desc'				=> $this->field_type_description( $key['desc'] ),
+			'desc'				=> $this->description( $key['desc'] ),
 			'js_dependencies'	=> array(),
 		) );
 
@@ -288,12 +275,12 @@ class Fields implements Fields_Interface {
 	 * @param  string $out The HTML form output.
 	 * @return string      Return the HTML Field Text
 	 */
-	public function text( array $key, $out = '' ) {
+	// public function text( array $key, $out = '' ) {
 
-		$attr = array();
+	// 	$attr = array();
 
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
+	// 	return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+	// }
 
 	/**
 	 * Create the Field Text
@@ -937,30 +924,6 @@ class Fields implements Fields_Interface {
 	}
 
 	/**
-	 * Create the field label
-	 *
-	 * @access public
-	 * @param  string $name The labels name.
-	 * @param  string $id   The labels ID.
-	 *
-	 * @return string       Return the labels
-	 */
-	public function label( $name = '', $id = '', $br = true ) {
-
-		if ( empty( $name ) ) {
-			return '';
-		}
-
-		return sprintf(
-			'<label for="%s">%s</label>%s',
-			esc_attr( $id ),
-			esc_html( $name ),
-			$br ? '<br/>' : ''
-		);
-
-	}
-
-	/**
 	 * Upload the Javascripts for the media uploader in widget config
 	 *
 	 * @todo Sistemare gli script da caricare per i vari widget nel pannello admin
@@ -1006,5 +969,69 @@ class Fields implements Fields_Interface {
 
 		}
 
+	}
+
+	/**
+	 * Combines attributes into a string for a form element
+	 *
+	 * @since  2.0.0
+	 * @param  array $attrs        Attributes to concatenate.
+	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
+	 *
+	 * @return string               String of attributes for form element
+	 */
+	public function concat_attrs( $attrs, $attr_exclude = [] ) {
+
+		$context = isset( $attrs['id'] ) ? $attrs['id'] : '';
+
+		// $attributes = '';
+		// foreach ( $attrs as $attr => $val ) {
+		// 	$excluded = in_array( $attr, (array) $attr_exclude, true );
+		// 	$empty    = false === $val && 'value' !== $attr;
+		// 	if ( ! $excluded && ! $empty ) {
+		// 		// If data attribute, use single quote wraps, else double.
+		// 		$quotes = stripos( $attr, 'data-' ) !== false ? "'" : '"';
+		// 		$attributes .= sprintf( ' %1$s=%3$s%2$s%3$s', $attr, $val, $quotes );
+		// 	}
+		// }
+		// return $attributes;
+
+		$attrs = array_diff_key( $attrs, array_flip( $attr_exclude ) );
+
+		return HTML\get_attr( $context, $attrs );
+	}
+
+	/**
+	 * Determine whether this field should show, based on the 'show_on_cb' callback.
+	 * Forked from CMB2
+	 * @see CMB2_Field.php
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param  array $key      The array with field arguments.
+	 *
+	 * @return bool Whether the field should be shown.
+	 */
+	public function should_show( $key ) {
+		
+		/**
+		 * Default. Show the field
+		 *
+		 * @var bool
+		 */
+		$show = true;
+
+		if ( ! isset( $key[ 'show_on_cb' ] ) ) {
+			return $show;
+		}
+
+		/**
+		 * Use the callback to determine showing the field, if it exists
+		 */
+		if ( is_callable( $key[ 'show_on_cb' ] ) ) {
+			return (bool) call_user_func( $key[ 'show_on_cb' ], $this );
+		}
+
+		return (bool) $show;
 	}
 }
