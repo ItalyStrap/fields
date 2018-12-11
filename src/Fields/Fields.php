@@ -113,13 +113,15 @@ class Fields implements Fields_Interface {
 			'section',
 		];
 
+		$wrapper = '<p%1$s>%2$s</p>';
+
 		/**
 		 * Run method
 		 */
 		return sprintf(
-			'<p%1$s>%2$s</p>',
+			$wrapper,
 			HTML\get_attr( 'get_field_type', [ 'class' => $attr['class-p'] ] ),
-			$this->get_view( $this->exclude_attrs( $attr, $excluded ) )
+			$this->get_view( $attr )->render( $this->exclude_attrs( $attr, $excluded ) )
 		);
 	}
 
@@ -129,38 +131,32 @@ class Fields implements Fields_Interface {
 	 * @param  string $type
 	 * @return string
 	 */
-	public function get_view( $attr ) {
+	private function get_view( $attr ) {
 
-		if ( ! isset( $this->types[ $attr['type'] ] ) ) {
-			return call_user_func( [ new $this->types['text'], 'render' ], $attr );
-		}
+        $type = (string) $attr['type'];
+        $search = strtolower($type);
 
-		return $this->is_callable( $this->types[ $attr['type'] ] )
-				? call_user_func( [ new $this->types[ $attr['type'] ], 'render' ], $attr )
-				: call_user_func( [ new $this->types['text'], 'render' ], $attr );
+        if ( isset( $this->types[ $search ] ) ) {
 
-        // $type = (string) $type;
-        // $search = strtolower($type);
+			return new $this->types[ $search ];
 
-        // if (isset($this->typeToView[$search])) {
-        //     $class = $this->typeToView[$search];
+        } elseif ( class_exists( $type ) ) {
 
-        //     return new $class();
-        // } elseif (class_exists($type)) {
-        //     $class = new $type();
-        //     if ($class instanceof RenderableElementInterface) {
-        //         return $class;
-        //     }
-        // }
+			$class = new $type();
+            // if ( $class instanceof RenderableElementInterface ) {
+				return $class;
+            // }
+        }
 
-        // throw new Exception\UnknownTypeException(
+        return new $this->types['text'];
+
+        // throw new \Exception\UnknownTypeException(
         //     sprintf(
         //         'The given type "%s" is not an instance of "%s".',
         //         $type,
-        //         RenderableElementInterface::class
+        //         'RenderableElementInterface::class'
         //     )
         // );
-
 	}
 
 	/**

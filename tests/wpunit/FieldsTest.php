@@ -212,6 +212,18 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     }
 
     /**
+     * @test
+     * it_should_be_hidden
+     */
+    public function it_should_be_type_text() {
+
+        $sut = $this->make_instance();
+        $html = $sut->render( ['type' => null ] );
+
+        $this->assertContains( '<input', $html );
+    }
+
+    /**
      * Get fields_type output
      */
     public function get_fields_input_output( $type = 'text', $tag = 'input' ) {
