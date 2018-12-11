@@ -31,9 +31,17 @@ Domain Path: Domain Path
 
 require( __DIR__ . '/vendor/autoload.php' );
 
+if ( is_admin() ) {
+	return;
+}
+
 function fields_example() {
 
 	$fields = new \ItalyStrap\Fields\Fields();
+
+	// $fields->add_type( 'closure', function () {} );
+	// $fields->add_type( 'closure', function () {} );
+// d( $fields->get_all_types() );
 
 	// $attrs = [
 	//     'id'        => 'id',
@@ -47,23 +55,54 @@ function fields_example() {
 	// d( $fields->concat_attrs( $attrs ) );
 	// d( $fields->concat_attrs( $attrs, $exclude ) );
 
+	// $text = array(
+	// 	'id'			=> 'widget_class',
+	// 	'type'			=> 'closure',
+	// );
+
+	// d( $fields->render( $text, [] ) );
+
 	$text = array(
-		'name'			=> __( 'Widget Class', 'italystrap' ),
+		// 'id'			=> 'widget_class',
+		'type'			=> 'not_callable',
+	);
+
+	// d( $fields->render( $text ) );
+
+	$text = array(
+		// 'id'			=> 'widget_class',
+		'type'			=> 'text',
+		// 'show_on_cb'	=> false,
+		// 'show_on_cb'	=> 'false',
+	);
+
+	// d( $fields->render( $text ) );
+
+	$text = array(
+		'type'			=> 'text',
+	);
+
+	// d( $fields->render( $text, $text ) );
+
+	$text = array(
+		'label'			=> __( 'Widget Class', 'italystrap' ),
 		'desc'			=> __( 'Enter the widget class name.', 'italystrap' ),
+		'name'			=> __( 'Widget Class', 'italystrap' ),
 		'id'			=> 'widget_class',
-		'_id'			=> 'widget_class',
-		'_name'			=> 'widget_class',
+		// '_id'			=> 'widget_class',
+		// '_name'			=> 'widget_class',
 		'type'			=> 'text',
 		'class'			=> 'widefat widget_class',
-		'placeholder'	=> 'widefat widget_class',
+		'placeholder'	=> 'placeholder',
 		'default'		=> true,
 		'value'			=> 'general',
 		'size'			=> '',
 	);
 
-	d( $fields->text( $text ) );
+	// d( $fields->text( $text ) );
 
 	$text = array(
+		'label'			=> __( 'Widget Class', 'italystrap' ),
 		'name'			=> __( 'Widget Class', 'italystrap' ),
 		'desc'			=> __( 'Enter the widget class name.', 'italystrap' ),
 		'id'			=> 'widget_class',
@@ -71,13 +110,21 @@ function fields_example() {
 		// '_name'			=> 'widget_class',
 		'type'			=> 'text',
 		'class'			=> 'widefat widget_class',
-		'placeholder'	=> 'widefat widget_class',
+		'placeholder'	=> 'placeholder',
 		'default'		=> true,
-		'value'			=> 'general',
+		'value'			=> 'value',
 		'size'			=> '',
 	);
 
-	d( $fields->get_field_type( $text, [] ) );
+	// d( $fields->render( $text, [] ) );
+
+?>
+
+<form action="">
+	<?php echo $fields->render( $text ); ?>
+</form>
+
+<?php
 }
 
 add_action( 'wp_footer', 'fields_example' );

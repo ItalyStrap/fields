@@ -30,8 +30,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
             'name'      => __( 'Widget Class', 'italystrap' ),
             'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
             'id'        => 'widget_class',
-            '_id'       => 'widget_class',
-            '_name'     => 'widget_class',
+            // '_id'       => 'widget_class',
+            // '_name'     => 'widget_class',
             'type'      => 'text',
             'class'     => 'widefat widget_class',
             'placeholder'     => 'widefat widget_class',
@@ -44,8 +44,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
                 'name'      => __( 'Widget Class', 'italystrap' ),
                 'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
                 'id'        => 'widget_class',
-                '_id'       => 'widget_class',
-                '_name'     => 'widget_class',
+                // '_id'       => 'widget_class',
+                // '_name'     => 'widget_class',
                 'type'      => 'hidden',
                 'class'     => 'widefat widget_class',
                 'placeholder'     => 'widefat widget_class',
@@ -58,8 +58,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
                 'name'      => __( 'Widget Class', 'italystrap' ),
                 'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
                 'id'        => 'widget_class',
-                '_id'       => 'widget_class',
-                '_name'     => 'widget_class',
+                // '_id'       => 'widget_class',
+                // '_name'     => 'widget_class',
                 'class'     => 'widefat widget_class',
                 'placeholder'     => 'widefat widget_class',
                 'default'   => true,
@@ -70,8 +70,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
                 'name'      => __( 'Widget Class', 'italystrap' ),
                 'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
                 'id'        => 'widget_class',
-                '_id'       => 'widget_class',
-                '_name'     => 'widget_class',
+                // '_id'       => 'widget_class',
+                // '_name'     => 'widget_class',
                 'type'      => 'checkbox',
                 'class'     => 'widefat widget_class',
                 // 'default'   => '',
@@ -82,8 +82,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
                 'name'      => __( 'Widget Class', 'italystrap' ),
                 'desc'      => __( 'Enter the widget class name.', 'italystrap' ),
                 'id'        => 'widget_class',
-                '_id'       => 'widget_class',
-                '_name'     => 'widget_class',
+                // '_id'       => 'widget_class',
+                // '_name'     => 'widget_class',
                 'type'      => 'text',
                 'class'     => 'widefat widget_class',
                 'default'   => true,
@@ -133,6 +133,28 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $this->assertInstanceOf( '\ItalyStrap\Fields\Fields_Interface', $sut );
     }
 
+    public function input_types_provider() {
+
+        $sut = $this->make_instance();
+
+        return array_map( function ( $class ) {
+            return [ $class ];
+        }, $sut->get_all_types() );
+    }
+
+    /**
+     * @test
+     * it_should_be_render_types
+     * @dataProvider  input_types_provider
+     */
+    public function it_should_be_render_types( $type ) {
+
+        $sut = $this->make_instance();
+        $html = $sut->render( [ 'type' => $type ] );
+
+        $this->assertContains( 'type="' . $type . '"', $html );
+    }
+
     /**
      * @test
      * it_should_be_shown
@@ -143,20 +165,23 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
         // Test callback
         $key[ 'show_on_cb' ] = '__return_true';
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertContains( '<input', $sut->render( $key ) );
 
         // Test boolean
         $key[ 'show_on_cb' ] = true;
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertContains( '<input', $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = 'true';
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertContains( '<input', $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = 1;
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertContains( '<input', $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = '1';
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertContains( '<input', $sut->render( $key ) );
+
+        $key[ 'show_on_cb' ] = null;
+        $this->assertContains( '<input', $sut->render( $key ) );
     }
 
     /**
@@ -167,20 +192,23 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
         $sut = $this->make_instance();
         $key[ 'show_on_cb' ] = '__return_false';
-        $this->assertFalse( $sut->should_show( $key ) );
+        $this->assertEmpty( $sut->render( $key ) );
 
         // Test boolean
         $key[ 'show_on_cb' ] = false;
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertEmpty( $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = 'false';
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertEmpty( $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = 0;
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertEmpty( $sut->render( $key ) );
 
         $key[ 'show_on_cb' ] = '0';
-        $this->assertTrue( $sut->should_show( $key ) );
+        $this->assertEmpty( $sut->render( $key ) );
+
+        $key[ 'show_on_cb' ] = '';
+        $this->assertEmpty( $sut->render( $key ) );
     }
 
     /**
@@ -231,13 +259,13 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      * it should have proper attributes
      * @dataProvider  input_types_and_attributes_provider
      */
-    public function it_should_have_proper_attributes( $type, $attr ) {
+    // public function it_should_have_proper_attributes( $type, $attr ) {
 
-        $element = $this->get_fields_input_output( $type );
+    //     $element = $this->get_fields_input_output( $type );
 
-        $this->assertNotEmpty( $element->getAttribute( $attr ), "Attribute $attr is empty for type $type" );
+    //     $this->assertNotEmpty( $element->getAttribute( $attr ), "Attribute $attr is empty for type $type" );
 
-    }
+    // }
 
     /**
      * @test

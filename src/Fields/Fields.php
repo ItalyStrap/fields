@@ -18,165 +18,170 @@ use InvalidArgumentException;
  */
 class Fields implements Fields_Interface {
 
+	private $types = [
+        'button'			=> '\ItalyStrap\Fields\View\Input',
+        'color'				=> '\ItalyStrap\Fields\View\Input',
+        'date'				=> '\ItalyStrap\Fields\View\Input',
+        'datetime'			=> '\ItalyStrap\Fields\View\Input',
+        'datetime-local'	=> '\ItalyStrap\Fields\View\Input',
+        'email'				=> '\ItalyStrap\Fields\View\Input',
+        'file'				=> '\ItalyStrap\Fields\View\Input',
+        'hidden'			=> '\ItalyStrap\Fields\View\Input',
+        'image'				=> '\ItalyStrap\Fields\View\Input',
+        'month'				=> '\ItalyStrap\Fields\View\Input',
+        'number'			=> '\ItalyStrap\Fields\View\Input',
+        'password'			=> '\ItalyStrap\Fields\View\Input',
+        'range'				=> '\ItalyStrap\Fields\View\Input',
+        'search'			=> '\ItalyStrap\Fields\View\Input',
+        'submit'			=> '\ItalyStrap\Fields\View\Input',
+        'tel'				=> '\ItalyStrap\Fields\View\Input',
+        'text'				=> '\ItalyStrap\Fields\View\Input',
+        'time'				=> '\ItalyStrap\Fields\View\Input',
+        'url'				=> '\ItalyStrap\Fields\View\Input',
+        'week'				=> '\ItalyStrap\Fields\View\Input',
+	];
+
 	/**
-	 * Set _id _name attributes
+	 * add type
 	 *
-	 * @todo Creare codice per settare _id e _name in caso non siano forniti
-	 *       come chiave -> valore con l'array $key.
-	 *       Attualmente sono generati dalle classi che gestiscono widget e admin
-	 *       Vedere: Widget::field_type();
-	 *       Vedere: Admin::get_field_type();
-	 *       Valutare se passare per referenza il valore
-	 *
-	 * @param  array $key The array with field arguments.
-	 * @return array      The new array with _id and _name set.
+	 * @param  string $value [description]
+	 * @return string        [description]
 	 */
-	public function set_attr_id_name( array &$key ) {
-
-		//italystrap_settings
-		if ( empty( $this->args['options_name'] ) ) {
-			$this->args['options_name'] = 'italystrap_settings';
-		}
-
-		/**
-		 * Set field id and name
-		 */
-		$key['_id'] = $key['_name'] = $this->args['options_name'] . '[' . $key['id'] . ']';
-
-		return $key;
-	
+	public function add_type( $type, $content = null ) {
+		$this->types[ $type ] = $content;
 	}
 
 	/**
-	 * Get the field type
+	 * add type
 	 *
-	 * @param  array $key      The array with field arguments.
+	 * @param  string $value [description]
+	 * @return string        [description]
+	 */
+	public function get_type( $type ) {
+		return $this->types[ $type ];
+	}
+
+	/**
+	 * add type
+	 *
+	 * @param  string $value [description]
+	 * @return string        [description]
+	 */
+	public function get_all_types() {
+		return $this->types;
+	}
+
+	/**
+	 * Render the field type
+	 *
+	 * @param  array $attr     The array with field arguments.
 	 * @param  array $instance This is the $instance variable of widget
 	 *                         or the options variable of the plugin.
 	 *
-	 * @return string           Return the field html
+	 * @return string           Return the html field
 	 */
-	public function get_field_type( array $key, array $instance ) {
-
-		$default = [
-			'type'	=> 'text',
-		];
-
-		if ( ! isset( $key['_id'] ) ) {
-			$key['_id'] = $key['id'];
-		}
-
-		if ( ! isset( $key['_name'] ) ) {
-			$key['_name'] = trim( strtolower( str_replace( ' ', '', $key['name'] ) ) );
-		}
+	public function render( array $attr, array $instance = [] ) {
 
 		/**
 		 * If field is requesting to be conditionally shown
 		 */
-		if ( ! $this->should_show( $key ) ) {
+		if ( ! $this->should_show( $attr ) ) {
 			return '';
 		}
 
-		/**
-		 * Set field type
-		 */
-		if ( ! isset( $key['type'] ) ) {
-			$key['type'] = 'text';
+		$default = [
+			'type'		=> 'text',
+			'id'		=> uniqid(),
+			'default'	=> '',
+			'value'		=> null,
+			'class-p'	=> '',
+		];
+
+		$attr = array_merge( $default, $attr );
+
+		if ( isset( $instance[ $attr['id'] ] ) ) {
+			$attr['value'] = $instance[ $attr['id'] ];
 		}
 
-		/**
-		 * Prefix method
-		 *
-		 * @var string
-		 */
-		// $field_method = 'field_type_' . str_replace( '-', '_', $key['type'] );
-		$field_method = str_replace( '-', '_', $key['type'] );
-
-		/**
-		 * Set Defaults
-		 */
-		$key['default'] = isset( $key['default'] ) ? ( (string) $key['default'] ) : '';
-
-		if ( isset( $instance[ $key['id'] ] ) ) {
-			/**
-			 * Non ricordo perché ho fatto la if else sotto ad ogni modo il valore è già escaped quando è stampato dal metodo dedicato quindi non serve ma lo tengo per fare ulteriori test in futuro.
-			 * Con la text area il valore deve essere passato senza nessuna validazione se no non stampa l'html.
-			 */
-			$key['value'] = $instance[ $key['id'] ];
-
-			// if ( is_array( $instance[ $key['id'] ] ) ) {
-			// 	$key['value'] = $instance[ $key['id'] ];
-
-			// } else {
-			// 	$key['value'] = strip_tags( $instance[ $key['id'] ] );
-			// }
-		} else {
-			$key['value'] = null;
-		}
-
-		/**
-		 * CSS class for <p>
-		 *
-		 * @var string
-		 */
-		$p_class = isset( $key['class-p'] ) ? ' class="' . $key['class-p'] . '"' : '';
-
-		/**
-		 * The field html
-		 *
-		 * @var string
-		 */
-		$output = '';
+		$excluded = [
+			'label',
+			'desc',
+			'default',
+			'class-p',
+			'validate',
+			'sanitize',
+			'section',
+		];
 
 		/**
 		 * Run method
 		 */
-		$output = sprintf(
+		return sprintf(
 			'<p%1$s>%2$s</p>',
-			$p_class,
-			method_exists( $this, $field_method ) ? $this->$field_method( $key ) : $this->text( $key )
+			HTML\get_attr( 'get_field_type', [ 'class' => $attr['class-p'] ] ),
+			$this->get_view( $this->exclude_attrs( $attr, $excluded ) )
 		);
+	}
 
-		return $output;
+	/**
+	 * Render View
+	 *
+	 * @param  string $type
+	 * @return string
+	 */
+	public function get_view( $attr ) {
+
+		if ( ! isset( $this->types[ $attr['type'] ] ) ) {
+			return call_user_func( [ new $this->types['text'], 'render' ], $attr );
+		}
+
+		return $this->is_callable( $this->types[ $attr['type'] ] )
+				? call_user_func( [ new $this->types[ $attr['type'] ], 'render' ], $attr )
+				: call_user_func( [ new $this->types['text'], 'render' ], $attr );
+
+        // $type = (string) $type;
+        // $search = strtolower($type);
+
+        // if (isset($this->typeToView[$search])) {
+        //     $class = $this->typeToView[$search];
+
+        //     return new $class();
+        // } elseif (class_exists($type)) {
+        //     $class = new $type();
+        //     if ($class instanceof RenderableElementInterface) {
+        //         return $class;
+        //     }
+        // }
+
+        // throw new Exception\UnknownTypeException(
+        //     sprintf(
+        //         'The given type "%s" is not an instance of "%s".',
+        //         $type,
+        //         RenderableElementInterface::class
+        //     )
+        // );
+
 	}
 
 	/**
 	 * Create the field label
 	 *
 	 * @param  string $label The labels name.
-	 * @param  string $id    The labels ID.
-	 * @param  bool   $br    The labels ID.
+	 * @param  string $for   The labels ID.
 	 *
 	 * @return string       Return the labels
 	 */
-	public function label( $label = '', $id = '', $br = true ) {
+	public function label( $label = '', $for = '' ) {
 
 		if ( empty( $label ) ) {
 			return '';
 		}
 
 		return sprintf(
-			'<label%s>%s</label>%s',
-			HTML\get_attr( $id, [ 'for' => $id ] ),
-			esc_html( $label ),
-			$br ? '<br/>' : ''
+			'<label%s>%s</label>',
+			HTML\get_attr( $for, [ 'for' => $for ] ),
+			esc_html( $label )
 		);
-	}
-
-	/**
-	 * Create the Field Text
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 *
-	 * @return string      Return the HTML Field Text
-	 */
-	public function text( array $key ) {
-
-		$attr = [];
-
-		return $this->label( $key['name'], $key['id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -185,63 +190,75 @@ class Fields implements Fields_Interface {
 	 * @link http://html5doctor.com/html5-forms-input-types/
 	 *
 	 * @since  2.0.0
+	 * @param  array $default Override arguments.
 	 * @param  array $attr Override arguments.
-	 * @param  array $key Override arguments.
 	 *
 	 * @return string     Form input element
 	 */
-	public function input( array $attr = array(), array $key = array() ) {
+	public function input( array $default = [], array $attr = [] ) {
+// d( $attr );
+// die();
+		// if ( isset( $attr['attributes'] ) ) {
+		// 	// $default = wp_parse_args( $default, (array) $attr['attributes'] );
+		// 	$default = array_merge( $default, (array) $attr['attributes'] );
+		// }
 
-		if ( isset( $key['attributes'] ) ) {
-			$attr = wp_parse_args( $attr, (array) $key['attributes'] );
+		$a = [
+			'desc'	=> '',
+			'type'	=> 'text',
+		];
+
+		$attr = array_merge( $a, $attr );
+
+		if ( 'hidden' === $attr['type'] ) {
+			$attr['desc'] = '';
 		}
 
-		$a = wp_parse_args( $attr, array(
-			'type'				=> 'text',
-			'class'				=> esc_attr( isset( $key['class'] ) ? $key['class'] : 'none' ),
-			'name'				=> esc_attr( $key['_name'] ),
-			'id'				=> esc_attr( $key['_id'] ),
-			'value'				=> isset( $key['value'] ) ? esc_attr( $key['value'] ) : ( isset( $key['default'] ) ? esc_attr( $key['default'] ) : '' ),
-			'desc'				=> $this->description( $key['desc'] ),
-			'js_dependencies'	=> array(),
-		) );
+		// $a = wp_parse_args( $default, array(
+		// 	'type'				=> 'text',
+		// 	'class'				=> $attr['class'],
+		// 	'name'				=> $attr['name'],
+		// 	'id'				=> $attr['id'],
+		// 	'value'				=>
+		// 		isset( $attr['value'] )
+		// 		? $attr['value']
+		// 		: isset( $attr['default'] ) ? $attr['default'] : '',
 
-		if ( isset( $key['size'] ) ) {
-			$a['size'] = esc_attr( $key['size'] );
-		}
+		// 	'desc'				=> $this->description( $attr['desc'] ),
+		// 	'js_dependencies'	=> [],
+		// ) );
 
-		if ( isset( $key['placeholder'] ) ) {
-			$a['placeholder'] = esc_attr( $key['placeholder'] );
-		}
+		// if ( isset( $attr['size'] ) ) {
+		// 	$a['size'] = esc_attr( $attr['size'] );
+		// }
 
+		// if ( isset( $attr['placeholder'] ) ) {
+		// 	$a['placeholder'] = esc_attr( $attr['placeholder'] );
+		// }
+// d( $a );
 		// if ( ! empty( $a['js_dependencies'] ) ) {
 		// 	CMB2_JS::add_dependencies( $a['js_dependencies'] );
 		// }
 
-		return sprintf( '<input%s/>%s', $this->concat_attrs( $a, array( 'desc', 'js_dependencies' ) ), $a['desc'] );
+		return sprintf(
+			'<input%s/>%s',
+			$this->concat_attrs( $attr, ['desc', 'js_dependencies'] ),
+			$attr['desc']
+		);
 	}
 
 	/**
-	 * Handles outputting an 'textarea' element
+	 * Get value of the field
 	 *
-	 * @since  2.0.0
-	 * @param  array $attr Override arguments.
-	 * @param  array $key Override arguments.
-	 *
-	 * @return string      Form textarea element
+	 * @param  array $attr
+	 * @return string|int|bool
 	 */
-	// public function textarea( array $attr = array(), array $key = array() ) {
-	// 	$a = wp_parse_args( $attr, array(
-	// 		'class' => esc_attr( isset( $key['class'] ) ? $key['class'] : '' ),
-	// 		'name'  => esc_attr( $key['_name'] ),
-	// 		'id'    => esc_attr( $key['_id'] ),
-	// 		'cols'  => '60',
-	// 		'rows'  => '10',
-	// 		'value' => esc_attr( isset( $key['value'] ) ? $key['value'] : ( isset( $key['default'] ) ? $key['default'] : '' ) ),
-	// 		'desc'  => $this->field_type_description( $key['desc'] ),
-	// 	) );
-	// 	return sprintf( '<textarea%s>%s</textarea>%s', $this->concat_attrs( $a, array( 'desc', 'value' ) ), $a['value'], $a['desc'] );
-	// }
+	public function set_value( array $attr ) {
+	
+		return isset( $attr['value'] )
+			? $attr['value']
+			: isset( $attr['default'] ) ? $attr['default'] : '';
+	}
 
 	/**
 	 * Get element with image for media fields
@@ -265,124 +282,6 @@ class Fields implements Fields_Interface {
 		if ( $output ) {
 			echo '<li class="carousel-image ui-state-default"><div><i class="dashicons dashicons-no"></i>' . $output . '</div></li>';// XSS ok.
 		}
-	}
-
-	/**
-	 * Create the Field Text
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Text
-	 */
-	// public function text( array $key, $out = '' ) {
-
-	// 	$attr = array();
-
-	// 	return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	// }
-
-	/**
-	 * Create the Field Text
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Text
-	 */
-	public function hidden( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'hidden',
-			'desc'	=> '',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
-
-	/**
-	 * Create the field number
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML field number
-	 */
-	public function number( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'number',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
-
-	/**
-	 * Create the field email
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML field email
-	 */
-	public function email( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'email',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
-
-	/**
-	 * Create the field url
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML field url
-	 */
-	public function url( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'url',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
-
-	/**
-	 * Create the field tel
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML field tel
-	 */
-	public function tel( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'tel',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-	}
-
-	/**
-	 * Create the field file
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML field file
-	 */
-	public function file( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'file',
-		);
-
-		return $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
 	}
 
 	/**
@@ -542,6 +441,28 @@ class Fields implements Fields_Interface {
 
 		return $out;
 	}
+
+	/**
+	 * Handles outputting an 'textarea' element
+	 *
+	 * @since  2.0.0
+	 * @param  array $attr Override arguments.
+	 * @param  array $key Override arguments.
+	 *
+	 * @return string      Form textarea element
+	 */
+	// public function textarea( array $attr = array(), array $key = array() ) {
+	// 	$a = wp_parse_args( $attr, array(
+	// 		'class' => esc_attr( isset( $key['class'] ) ? $key['class'] : '' ),
+	// 		'name'  => esc_attr( $key['_name'] ),
+	// 		'id'    => esc_attr( $key['_id'] ),
+	// 		'cols'  => '60',
+	// 		'rows'  => '10',
+	// 		'value' => esc_attr( isset( $key['value'] ) ? $key['value'] : ( isset( $key['default'] ) ? $key['default'] : '' ) ),
+	// 		'desc'  => $this->field_type_description( $key['desc'] ),
+	// 	) );
+	// 	return sprintf( '<textarea%s>%s</textarea>%s', $this->concat_attrs( $a, array( 'desc', 'value' ) ), $a['value'], $a['desc'] );
+	// }
 
 	/**
 	 * Create the Field Textarea
@@ -868,6 +789,35 @@ class Fields implements Fields_Interface {
 	}
 
 	/**
+	 * Set _id _name attributes
+	 *
+	 * @todo Creare codice per settare _id e _name in caso non siano forniti
+	 *       come chiave -> valore con l'array $key.
+	 *       Attualmente sono generati dalle classi che gestiscono widget e admin
+	 *       Vedere: Widget::field_type();
+	 *       Vedere: Admin::get_field_type();
+	 *       Valutare se passare per referenza il valore
+	 *
+	 * @param  array $key The array with field arguments.
+	 * @return array      The new array with _id and _name set.
+	 */
+	public function set_attr_id_name( array &$key ) {
+
+		//italystrap_settings
+		if ( empty( $this->args['options_name'] ) ) {
+			$this->args['options_name'] = 'italystrap_settings';
+		}
+
+		/**
+		 * Set field id and name
+		 */
+		$key['_id'] = $key['_name'] = $this->args['options_name'] . '[' . $key['id'] . ']';
+
+		return $key;
+	
+	}
+
+	/**
 	 * Create the field image_size
 	 *
 	 * @access public
@@ -917,7 +867,7 @@ class Fields implements Fields_Interface {
 		}
 
 		return  sprintf(
-			'<br/><small class="description">%s</small>',
+			'<div><small class="description">%s</small></div>',
 			wp_kses_post( $desc )
 		);
 
@@ -972,6 +922,32 @@ class Fields implements Fields_Interface {
 	}
 
 	/**
+	 * Get the field type
+	 *
+	 * @param  array $key      The array with field arguments.
+	 * @param  array $instance This is the $instance variable of widget
+	 *                         or the options variable of the plugin.
+	 *
+	 * @return string           Return the field html
+	 */
+	public function get_field_type( array $attr, array $instance ) {
+		return $this->render( $attr, $instance );
+	}
+
+	/**
+	 * Combines attributes into a string for a form element
+	 *
+	 * @since  2.0.0
+	 * @param  array $attrs        Attributes to concatenate.
+	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
+	 *
+	 * @return string               String of attributes for form element
+	 */
+	public function exclude_attrs( $attrs, $attr_exclude = [] ) {
+		return array_diff_key( $attrs, array_flip( $attr_exclude ) );
+	}
+
+	/**
 	 * Combines attributes into a string for a form element
 	 *
 	 * @since  2.0.0
@@ -996,9 +972,7 @@ class Fields implements Fields_Interface {
 		// }
 		// return $attributes;
 
-		$attrs = array_diff_key( $attrs, array_flip( $attr_exclude ) );
-
-		return HTML\get_attr( $context, $attrs );
+		return HTML\get_attr( $context, $this->exclude_attrs( $attrs, $attr_exclude ) );
 	}
 
 	/**
@@ -1012,8 +986,8 @@ class Fields implements Fields_Interface {
 	 *
 	 * @return bool Whether the field should be shown.
 	 */
-	public function should_show( $key ) {
-		
+	public function should_show( $attr ) {
+
 		/**
 		 * Default. Show the field
 		 *
@@ -1021,17 +995,43 @@ class Fields implements Fields_Interface {
 		 */
 		$show = true;
 
-		if ( ! isset( $key[ 'show_on_cb' ] ) ) {
+		if ( ! isset( $attr[ 'show_on_cb' ] ) ) {
 			return $show;
 		}
 
 		/**
 		 * Use the callback to determine showing the field, if it exists
 		 */
-		if ( is_callable( $key[ 'show_on_cb' ] ) ) {
-			return (bool) call_user_func( $key[ 'show_on_cb' ], $this );
+		if ( is_callable( $attr[ 'show_on_cb' ] ) ) {
+			return (bool) call_user_func( $attr[ 'show_on_cb' ], $this );
 		}
 
-		return (bool) $show;
+		if ( 'false' === $attr[ 'show_on_cb' ] ) {
+			return false;
+		}
+
+		return (bool) $attr[ 'show_on_cb' ];
+	}
+
+	/**
+	 * is_callable
+	 *
+	 * @param  mixed $mixed
+	 * @return bool
+	 */
+	private function is_callable( $mixed ) {
+
+		switch ( $mixed ) {
+			case is_array( $mixed ):
+				return is_callable( $mixed );
+				// break;
+			case is_string( $mixed ):
+				return is_callable( [ $mixed, 'render' ] );
+				// break;
+			
+			default:
+				return is_callable( $mixed );
+				// break;
+		}
 	}
 }

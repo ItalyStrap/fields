@@ -15,14 +15,13 @@ namespace ItalyStrap\Fields;
 interface Fields_Interface {
 
 	/**
-	 * Handles outputting an 'input' element
+	 * Render the field type
 	 *
-	 * @link http://html5doctor.com/html5-forms-input-types/
+	 * @param  array $attr     The array with field arguments.
+	 * @param  array $instance This is the $instance variable of widget
+	 *                         or the options variable of the plugin.
 	 *
-	 * @since  2.0.0
-	 * @param  array $attr Override arguments.
-	 * @param  array $key Override arguments.
-	 * @return string     Form input element
+	 * @return string           Return the html field
 	 */
-	public function input( array $attr = array(), array $key = array() );
+	public function render( array $attr, array $instance = [] );
 }
