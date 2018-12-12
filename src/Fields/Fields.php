@@ -47,7 +47,7 @@ class Fields implements Fields_Interface {
 	 * @param  string $value [description]
 	 * @return string        [description]
 	 */
-	public function add_type( $type, $content = null ) {
+	private function add_type( $type, $content = null ) {
 		$this->types[ $type ] = $content;
 	}
 
@@ -57,18 +57,17 @@ class Fields implements Fields_Interface {
 	 * @param  string $value [description]
 	 * @return string        [description]
 	 */
-	public function get_type( $type ) {
+	private function get_type( $type ) {
 		return $this->types[ $type ];
 	}
 
-	/**
-	 * add type
-	 *
-	 * @param  string $value [description]
-	 * @return string        [description]
-	 */
+    /**
+     * Get all types
+     *
+     * @return array [description]
+     */
 	public function get_all_types() {
-		return $this->types;
+		return (array) $this->types;
 	}
 
 	/**
@@ -85,7 +84,7 @@ class Fields implements Fields_Interface {
 		/**
 		 * If field is requesting to be conditionally shown
 		 */
-		if ( ! $this->should_show( $attr ) ) {
+		if ( ! $this->should_show($attr) ) {
 			return '';
 		}
 
@@ -95,7 +94,11 @@ class Fields implements Fields_Interface {
 			'default'	=> '',
 			'value'		=> null,
 			'class-p'	=> '',
+			'label'	    => '',
+			'desc'	    => '',
 		];
+
+		$default['name'] = $default['id'];
 
 		$attr = array_merge( $default, $attr );
 
@@ -113,15 +116,18 @@ class Fields implements Fields_Interface {
 			'section',
 		];
 
-		$wrapper = '<p%1$s>%2$s</p>';
+		$wrapper = '<div%1$s>%2$s</div>';
 
 		/**
 		 * Run method
 		 */
 		return sprintf(
 			$wrapper,
-			HTML\get_attr( 'get_field_type', [ 'class' => $attr['class-p'] ] ),
-			$this->get_view( $attr )->render( $this->exclude_attrs( $attr, $excluded ) )
+			HTML\get_attr( $attr['id'], [ 'class' => $attr['class-p'] ] ),
+			$this->get_view( $attr )
+                ->with( 'label', $attr['label'] )
+                ->with( 'desc', $attr['desc'] )
+                ->render( $this->exclude_attrs( $attr, $excluded ) )
 		);
 	}
 
@@ -238,7 +244,7 @@ class Fields implements Fields_Interface {
 
 		return sprintf(
 			'<input%s/>%s',
-			$this->concat_attrs( $attr, ['desc', 'js_dependencies'] ),
+			$this->concat_attrs($attr, ['desc', 'js_dependencies']),
 			$attr['desc']
 		);
 	}
@@ -930,29 +936,29 @@ class Fields implements Fields_Interface {
 		return $this->render( $attr, $instance );
 	}
 
-	/**
-	 * Combines attributes into a string for a form element
-	 *
-	 * @since  2.0.0
-	 * @param  array $attrs        Attributes to concatenate.
-	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
-	 *
-	 * @return string               String of attributes for form element
-	 */
-	public function exclude_attrs( $attrs, $attr_exclude = [] ) {
+    /**
+     * Combines attributes into a string for a form element
+     *
+     * @since  2.0.0
+     * @param  array $attrs Attributes to concatenate.
+     * @param  array $attr_exclude Attributes that should NOT be concatenated.
+     *
+     * @return string               String of attributes for form element
+     */
+	private function exclude_attrs( array $attrs, array $attr_exclude = [] ) {
 		return array_diff_key( $attrs, array_flip( $attr_exclude ) );
 	}
 
-	/**
-	 * Combines attributes into a string for a form element
-	 *
-	 * @since  2.0.0
-	 * @param  array $attrs        Attributes to concatenate.
-	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
-	 *
-	 * @return string               String of attributes for form element
-	 */
-	public function concat_attrs( $attrs, $attr_exclude = [] ) {
+    /**
+     * Combines attributes into a string for a form element
+     *
+     * @since  2.0.0
+     * @param  array $attrs Attributes to concatenate.
+     * @param  array $attr_exclude Attributes that should NOT be concatenated.
+     *
+     * @return string               String of attributes for form element
+     */
+	private function concat_attrs($attrs, $attr_exclude = [] ) {
 
 		$context = isset( $attrs['id'] ) ? $attrs['id'] : '';
 
@@ -968,21 +974,20 @@ class Fields implements Fields_Interface {
 		// }
 		// return $attributes;
 
-		return HTML\get_attr( $context, $this->exclude_attrs( $attrs, $attr_exclude ) );
+		return HTML\get_attr( $context, $this->exclude_attrs($attrs, $attr_exclude) );
 	}
 
-	/**
-	 * Determine whether this field should show, based on the 'show_on_cb' callback.
-	 * Forked from CMB2
-	 * @see CMB2_Field.php
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param  array $key      The array with field arguments.
-	 *
-	 * @return bool Whether the field should be shown.
-	 */
-	public function should_show( $attr ) {
+    /**
+     * Determine whether this field should show, based on the 'show_on_cb' callback.
+     * Forked from CMB2
+     * @see CMB2_Field.php
+     *
+     * @since 2.0.0
+     *
+     * @param $attr
+     * @return bool Whether the field should be shown.
+     */
+	private function should_show($attr) {
 
 		/**
 		 * Default. Show the field

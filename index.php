@@ -41,8 +41,15 @@ function fields_example() {
 
 	// $fields->add_type( 'closure', function () {} );
 	// $fields->add_type( 'closure', function () {} );
-// d( $fields->get_all_types() );
-
+//d( $fields->get_all_types() );
+//$types = array_map( function ( $class ) {
+//
+//    d( mb_strpos( $class, 'Inputs' ) );
+//
+//    d( $class );
+//        return [ $class ];
+//    }, (array) $fields->get_all_types() );
+//d( $types );
 	// $attrs = [
 	//     'id'        => 'id',
 	//     'class'     => 'class',
@@ -62,29 +69,65 @@ function fields_example() {
 
 	// d( $fields->render( $text, [] ) );
 
-	$text = array(
-		// 'id'			=> 'widget_class',
-		'type'			=> 'not_callable',
-	);
+//	$text = array(
+//		// 'id'			=> 'widget_class',
+//		'type'			=> 'not_callable',
+//	);
 
 	// d( $fields->render( $text ) );
 
-	$text = array(
-		// 'id'			=> 'widget_class',
-		'type'			=> 'text',
-		// 'show_on_cb'	=> false,
-		// 'show_on_cb'	=> 'false',
-	);
+//	$text = array(
+//		// 'id'			=> 'widget_class',
+//		'type'			=> 'text',
+//		// 'show_on_cb'	=> false,
+//		// 'show_on_cb'	=> 'false',
+//	);
 
 	// d( $fields->render( $text ) );
 
-	$text = array(
-		'type'			=> 'text',
-	);
+//	$text = array(
+//		'type'			=> 'text',
+//	);
 
 	// d( $fields->render( $text, $text ) );
 
-	$text = array(
+    $label = [
+            'label' => 'Label Title',
+    ];
+
+    print $fields->render( $label );
+    d( $fields->render( $label ) );
+
+    $label = [
+            'label' => [
+                    'content'     => 'Label Title',
+                    'attributes' => [
+                            'class'    => 'css_class',
+                    ],
+            ],
+    ];
+    print $fields->render( $label );
+    d( $fields->render( $label ) );
+
+    $description = [
+            'desc' => 'Description',
+    ];
+    print $fields->render( $description );
+    d( $fields->render( $description ) );
+
+    $description = [
+            'desc' => [
+                    'content'   => 'Description',
+                    'attributes' => [
+                            'id'    => 'uniqueDescID',
+                            'class'    => 'css_desc_class',
+                    ],
+            ],
+    ];
+    print $fields->render( $description );
+    d( $fields->render( $description ) );
+
+	$text = [
 		'label'			=> __( 'Widget Class', 'italystrap' ),
 		'desc'			=> __( 'Enter the widget class name.', 'italystrap' ),
 		'name'			=> __( 'Widget Class', 'italystrap' ),
@@ -97,11 +140,11 @@ function fields_example() {
 		'default'		=> true,
 		'value'			=> 'general',
 		'size'			=> '',
-	);
+    ];
 
 	// d( $fields->text( $text ) );
 
-	$text = array(
+	$text = [
 		'label'			=> __( 'Widget Class', 'italystrap' ),
 		'name'			=> __( 'Widget Class', 'italystrap' ),
 		'desc'			=> __( 'Enter the widget class name.', 'italystrap' ),
@@ -114,14 +157,14 @@ function fields_example() {
 		'default'		=> true,
 		'value'			=> 'value',
 		'size'			=> '',
-	);
+    ];
 
 	// d( $fields->render( $text, [] ) );
 
 ?>
 
 <form action="">
-	<?php echo $fields->render( $text ); ?>
+	<?php // echo $fields->render( $text ); ?>
 </form>
 
 <?php

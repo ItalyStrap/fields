@@ -133,21 +133,27 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $this->assertInstanceOf( '\ItalyStrap\Fields\Fields_Interface', $sut );
     }
 
+    /**
+     * @return array
+     */
     public function input_types_provider() {
 
         $sut = $this->make_instance();
 
         return array_map( function ( $class ) {
+            if ( ! mb_strpos( $class, 'Input' ) ) {
+                return $class;
+            }
             return [ $class ];
-        }, $sut->get_all_types() );
+        }, (array) $sut->get_all_types() );
     }
 
     /**
      * @test
-     * it_should_be_render_types
+     * it_should_be_render_input_types
      * @dataProvider  input_types_provider
      */
-    public function it_should_be_render_types( $type ) {
+    public function it_should_be_render_input_types( $type ) {
 
         $sut = $this->make_instance();
         $html = $sut->render( [ 'type' => $type ] );
@@ -221,6 +227,56 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $html = $sut->render( ['type' => null ] );
 
         $this->assertContains( '<input', $html );
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_have_label()
+    {
+
+        $sut = $this->make_instance();
+        $html = $sut->render( ['label' => 'Title label' ] );
+
+        $this->assertContains( 'Title label', $html );
+
+        $html = $sut->render(
+            [
+                'label' => [
+                    'content'       => 'Title label',
+                    'attributes'    => [
+                        'class' => 'some_class',
+                    ],
+                ]
+            ]
+        );
+
+        $this->assertContains( 'Title label', $html );
+        $this->assertContains( 'class="some_class"', $html );
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_have_description()
+    {
+
+        $sut = $this->make_instance();
+        $html = $sut->render( ['desc' => 'Description' ] );
+
+        $this->assertContains( 'Description', $html );
+
+        $html = $sut->render( ['desc' => [
+            'content'      => 'Description',
+            'attributes' => [
+                'class' => 'some_desc_class',
+            ],
+        ] ] );
+
+        $this->assertContains( 'Description', $html );
+        $this->assertContains( 'class="some_desc_class"', $html );
+
     }
 
     /**

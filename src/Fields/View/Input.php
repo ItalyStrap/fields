@@ -9,35 +9,22 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Input {
-
-	/**
-	 * Function description
-	 *
-	 * @param  string $value [description]
-	 * @return string        [description]
-	 */
-	public function __construct( $element = '' ) {
-	
-		$this->element = $element;
-	
-	}
+class Input extends Abstract_View {
 
     /**
-     * @param ElementInterface $element
+     * @param ElementInterface $attr
      *
      * @return string
      */
-    public function render( $element ) {
-	
-		$this->element = $element;
-    	// $this->label( $key['name'], $key['id'] )
-        // $attributes = $element->attributes();
-// d( $element );
+    public function render( array $attr ) {
+
+        $this->elements = array_merge( $this->elements, $attr );
+
         return sprintf(
-            '<input%s/>',
-            HTML\get_attr( 'input', $this->element )
-            // $this->attributesToString($attributes)
+            '%s<input%s/>%s',
+            $this->label(),
+            HTML\get_attr( 'input', $attr ),
+            $this->description()
         );
     }
 }
