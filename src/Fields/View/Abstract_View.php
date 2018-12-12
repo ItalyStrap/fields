@@ -67,7 +67,14 @@ class Abstract_View {
 
         $content = '';
         $attr = [];
-
+//        $label = [
+//            'label' => [
+//                'content'     => 'Label Title',
+//                'attributes' => [
+//                    'class'    => 'css_class',
+//                ],
+//            ],
+//        ];
         if ( is_array( $this->elements[ $tag ] ) ) {
             $content = (string) $this->elements[ $tag ]['content'];
             $attr = (array) $this->elements[ $tag ]['attributes'];

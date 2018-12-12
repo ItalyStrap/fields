@@ -91,12 +91,20 @@ function fields_example() {
 
 	// d( $fields->render( $text, $text ) );
 
-    $label = [
+    $checkbox = [
+            'type'  => 'checkbox',
             'label' => 'Label Title',
     ];
 
-    print $fields->render( $label );
-    d( $fields->render( $label ) );
+    print $fields->render( $checkbox );
+    d( $fields->render( $checkbox ) );
+
+    $checkbox = [
+            'label' => 'Label Title',
+    ];
+
+    print $fields->render( $checkbox );
+    d( $fields->render( $checkbox ) );
 
     $label = [
             'label' => [

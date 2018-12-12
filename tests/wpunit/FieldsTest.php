@@ -140,12 +140,15 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
         $sut = $this->make_instance();
 
-        return array_map( function ( $class ) {
+        $array_map = [];
+        foreach ( (array) $sut->get_all_types() as $key => $class ) {
+
             if ( ! mb_strpos( $class, 'Input' ) ) {
-                return $class;
+                continue;
             }
-            return [ $class ];
-        }, (array) $sut->get_all_types() );
+            $array_map[ $key ] = [ $class ];
+        }
+        return $array_map;
     }
 
     /**

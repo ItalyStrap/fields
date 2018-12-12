@@ -19,6 +19,8 @@ use InvalidArgumentException;
 class Fields implements Fields_Interface {
 
 	private $types = [
+        'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
+
         'button'			=> '\ItalyStrap\Fields\View\Input',
         'color'				=> '\ItalyStrap\Fields\View\Input',
         'date'				=> '\ItalyStrap\Fields\View\Input',
@@ -102,6 +104,17 @@ class Fields implements Fields_Interface {
 
 		$attr = array_merge( $default, $attr );
 
+
+        // 	'value'				=>
+        // 		isset( $attr['value'] )
+        // 		? $attr['value']
+        // 		: isset( $attr['default'] ) ? $attr['default'] : '',
+
+//        isset( $attr['value'] )
+//            ? $attr['value']
+//            : isset( $attr['default'] ) ? $attr['default'] : '';
+        d( checked( $attr['value'], true, false ) );
+
 		if ( isset( $instance[ $attr['id'] ] ) ) {
 			$attr['value'] = $instance[ $attr['id'] ];
 		}
@@ -110,7 +123,7 @@ class Fields implements Fields_Interface {
 			'label',
 			'desc',
 			'default',
-			'class-p',
+			'class-p', // Deprecated
 			'validate',
 			'sanitize',
 			'section',
