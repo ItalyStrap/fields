@@ -164,64 +164,59 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $this->assertContains( 'type="' . $type . '"', $html );
     }
 
-    /**
-     * @test
-     * it_should_be_shown
-     */
-    public function it_should_be_shown() {
+	private function get_html( $cb ) {
+		$sut = $this->make_instance();
+		$attr[ 'type' ] = 'text';
+		$attr[ 'show_on_cb' ] = $cb;
+		return $sut->render( $attr );
+	}
 
-        $sut = $this->make_instance();
+	/**
+	 * @return array
+	 */
+	public function show_on_cb_show_provider() {
+		return [
+			[ '__return_true' ],
+			[ true ],
+			['true'],
+			[ 1 ],
+			[ '1' ],
+			[ null ],
+		];
+	}
 
-		$attr['type'] = 'text';
+	/**
+	 * @test
+	 * it_should_be_render_input_types
+	 * @dataProvider  show_on_cb_show_provider
+	 */
+	public function it_should_be_shown( $cb ) {
+		$this->assertContains( '<input', $this->get_html( $cb ) );
+	}
 
-        // Test callback
-        $attr[ 'show_on_cb' ] = '__return_true';
-        $this->assertContains( '<input', $sut->render( $attr ) );
+	/**
+	 * @return array
+	 */
+	public function show_on_cb_hidden_provider() {
+		return [
+			[ '__return_false' ],
+			[ false ],
+			['false'],
+			[ 0 ],
+			[ '0' ],
+			[ '' ],
+			[ 0.0 ],
+		];
+	}
 
-        // Test boolean
-        $attr[ 'show_on_cb' ] = true;
-        $this->assertContains( '<input', $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = 'true';
-        $this->assertContains( '<input', $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = 1;
-        $this->assertContains( '<input', $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = '1';
-        $this->assertContains( '<input', $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = null;
-        $this->assertContains( '<input', $sut->render( $attr ) );
-    }
-
-    /**
-     * @test
-     * it_should_be_hidden
-     */
-    public function it_should_be_hidden() {
-
-        $sut = $this->make_instance();
-
-        $attr[ 'show_on_cb' ] = '__return_false';
-        $this->assertEmpty( $sut->render( $attr ) );
-
-        // Test boolean
-        $attr[ 'show_on_cb' ] = false;
-        $this->assertEmpty( $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = 'false';
-        $this->assertEmpty( $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = 0;
-        $this->assertEmpty( $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = '0';
-        $this->assertEmpty( $sut->render( $attr ) );
-
-        $attr[ 'show_on_cb' ] = '';
-        $this->assertEmpty( $sut->render( $attr ) );
-    }
+	/**
+	 * @test
+	 * it_should_be_render_input_types
+	 * @dataProvider  show_on_cb_hidden_provider
+	 */
+	public function it_should_be_hidden( $cb ) {
+		$this->assertEmpty( $this->get_html( $cb ) );
+	}
 
     /**
      * @test
@@ -232,6 +227,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $sut = $this->make_instance();
         $html = $sut->render( ['type' => null ] );
 
+//        $this->assertContains( 'type="text"', $html );
         $this->assertContains( '<input', $html );
     }
 
@@ -343,14 +339,14 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 		//********
 
-//		$attr = [
-//			'type'  => 'checkbox',
-//			'value'	=> 'on',
-//		];
-//
-//		$html = $sut->render( $attr );
-//		$this->assertContains( 'checked="checked"', $html );
-//		unset($attr);
+		$attr = [
+			'type'  => 'checkbox',
+			'value'	=> 'on',
+		];
+
+		$html = $sut->render( $attr );
+		$this->assertContains( 'checked="checked"', $html );
+		unset($attr);
 
 		// Con valore di default e instance non è settato la checkbox ha la spunta
 		$attr = [

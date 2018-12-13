@@ -10,6 +10,7 @@
 
 namespace ItalyStrap\Fields;
 
+use idlikethis\Shortcodes\SimpleTest;
 use ItalyStrap\HTML;
 use InvalidArgumentException;
 
@@ -84,9 +85,15 @@ class Fields implements Fields_Interface {
             return $instance[ $attr['id'] ];
         }
 
-        return isset( $attr['value'] )
-            ? $attr['value']
-            : isset( $attr['default'] ) ? $attr['default'] : '';
+        if ( isset( $attr['value'] ) ) {
+            return $attr['value'];
+        }
+
+        if ( isset( $attr['default'] ) ) {
+            return $attr['default'];
+        }
+
+        return '';
     }
 
 	/**

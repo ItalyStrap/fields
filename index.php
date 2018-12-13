@@ -90,16 +90,16 @@ function fields_example() {
 		'default'		=> 'Default value',
 	);
 
-	print $fields->render( $attr );
-	d( $fields->render( $attr ) );
+//	print $fields->render( $attr );
+//	d( $fields->render( $attr ) );
 
     $attr = [
             'type'  => 'checkbox',
             'label' => 'Label Title',
     ];
 
-    print $fields->render( $attr );
-    d( $fields->render( $attr ) );
+//    print $fields->render( $attr );
+//    d( $fields->render( $attr ) );
 
     $attr = [
             'type'      => 'checkbox',
@@ -107,8 +107,8 @@ function fields_example() {
             'default'   => 2,
     ];
 
-    print $fields->render( $attr );
-    d( $fields->render( $attr ) );
+//    print $fields->render( $attr );
+//    d( $fields->render( $attr ) );
 
     $attr = [
             'type'  => 'checkbox',
@@ -118,19 +118,19 @@ function fields_example() {
 
     $instance['checkbox_ID'] = 'on';
 
-    print $fields->render( $attr, $instance );
-    d( $fields->render( $attr, $instance ) );
-
-//    $attr = [
-//            'type'  => 'checkbox',
-//            'label' => 'Label Title',
-//            'id'    => 'checkbox_ID',
-//    ];
-//
-//    $instance['checkbox_ID'] = 'on';
-//
 //    print $fields->render( $attr, $instance );
 //    d( $fields->render( $attr, $instance ) );
+
+    $attr = [
+            'type'  => 'checkbox',
+            'label' => 'Label Title',
+            'id'    => 'checkbox_only_value',
+            'value' => 'on',
+    ];
+
+
+    print $fields->render( $attr );
+    d( $attr['id'], $fields->render( $attr ) );
 
 //    $label = [
 //            'label' => 'Label Title',
