@@ -85,26 +85,59 @@ function fields_example() {
 
 	// d( $fields->render( $text ) );
 
-//	$text = array(
-//		'type'			=> 'text',
-//	);
+	$attr = array(
+		'type'			=> 'text',
+		'default'		=> 'Default value',
+	);
 
-	// d( $fields->render( $text, $text ) );
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
 
-    $checkbox = [
+    $attr = [
             'type'  => 'checkbox',
             'label' => 'Label Title',
     ];
 
-    print $fields->render( $checkbox );
-    d( $fields->render( $checkbox ) );
+    print $fields->render( $attr );
+    d( $fields->render( $attr ) );
 
-    $checkbox = [
-            'label' => 'Label Title',
+    $attr = [
+            'type'      => 'checkbox',
+            'label'     => 'Label Title',
+            'default'   => 2,
     ];
 
-    print $fields->render( $checkbox );
-    d( $fields->render( $checkbox ) );
+    print $fields->render( $attr );
+    d( $fields->render( $attr ) );
+
+    $attr = [
+            'type'  => 'checkbox',
+            'label' => 'Label Title',
+            'id'    => 'checkbox_ID',
+    ];
+
+    $instance['checkbox_ID'] = 'on';
+
+    print $fields->render( $attr, $instance );
+    d( $fields->render( $attr, $instance ) );
+
+//    $attr = [
+//            'type'  => 'checkbox',
+//            'label' => 'Label Title',
+//            'id'    => 'checkbox_ID',
+//    ];
+//
+//    $instance['checkbox_ID'] = 'on';
+//
+//    print $fields->render( $attr, $instance );
+//    d( $fields->render( $attr, $instance ) );
+
+//    $label = [
+//            'label' => 'Label Title',
+//    ];
+//
+//    print $fields->render( $label );
+//    d( $fields->render( $label ) );
 
     $label = [
             'label' => [
@@ -114,14 +147,14 @@ function fields_example() {
                     ],
             ],
     ];
-    print $fields->render( $label );
-    d( $fields->render( $label ) );
+//    print $fields->render( $label );
+//    d( $fields->render( $label ) );
 
     $description = [
             'desc' => 'Description',
     ];
-    print $fields->render( $description );
-    d( $fields->render( $description ) );
+//    print $fields->render( $description );
+//    d( $fields->render( $description ) );
 
     $description = [
             'desc' => [
@@ -132,8 +165,8 @@ function fields_example() {
                     ],
             ],
     ];
-    print $fields->render( $description );
-    d( $fields->render( $description ) );
+//    print $fields->render( $description );
+//    d( $fields->render( $description ) );
 
 	$text = [
 		'label'			=> __( 'Widget Class', 'italystrap' ),

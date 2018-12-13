@@ -72,12 +72,32 @@ class Fields implements Fields_Interface {
 		return (array) $this->types;
 	}
 
+    /**
+     * Get value of the field
+     *
+     * @param  array $attr
+     * @return string|int|bool
+     */
+    private function set_value( array $attr, array $instance = [] ) {
+
+        if ( isset( $instance[ $attr['id'] ] ) ) {
+            return $instance[ $attr['id'] ];
+        }
+
+        return isset( $attr['value'] )
+            ? $attr['value']
+            : isset( $attr['default'] ) ? $attr['default'] : '';
+    }
+
 	/**
 	 * Render the field type
 	 *
 	 * @param  array $attr     The array with field arguments.
 	 * @param  array $instance This is the $instance variable of widget
 	 *                         or the options variable of the plugin.
+     *                         Il funzionamento è semplice:
+     *                         $instance[ ID ] mi restituisce il valore preso dal DB
+     *                         Che può essere '' o valorizzato
 	 *
 	 * @return string           Return the html field
 	 */
@@ -86,38 +106,49 @@ class Fields implements Fields_Interface {
 		/**
 		 * If field is requesting to be conditionally shown
 		 */
-		if ( ! $this->should_show($attr) ) {
+		if ( ! $this->should_show( $attr ) ) {
 			return '';
 		}
 
+		if ( isset( $attr['class-p'] ) ) {
+		    _deprecated_argument(
+		            __FUNCTION__,
+                    '1.0',
+                    'This attributes is deprecated on . Use wrapper attributes instead'
+            );
+        }
+
+		/**
+		 * Questo lo setto con il default perché
+		 * i widget per esempio settano il name con [id]
+		 * così non devo fare nessun check
+         *
+         * Nei setting ID e name sono così:
+         * id="italystrap_settings[show-ids]"
+         * name="italystrap_settings[show-ids]"
+         *
+         * Nei widget così;
+         * id="widget-italystrap-posts-6-add_permalink_wrapper"
+         * name="widget-italystrap-posts[6][add_permalink_wrapper]"
+         *
+         * L'attributo for delle label è sempre associato all'ID
+         * della input.
+		 */
+		$defaul_ID = uniqid();
+		$defaul_name = $defaul_ID;
 		$default = [
 			'type'		=> 'text',
-			'id'		=> uniqid(),
+			'id'		=> $defaul_ID,
+			'name'		=> $defaul_name,
 			'default'	=> '',
-			'value'		=> null,
-			'class-p'	=> '',
+			'class-p'	=> '', // Deprecated
 			'label'	    => '',
 			'desc'	    => '',
 		];
 
-		$default['name'] = $default['id'];
-
 		$attr = array_merge( $default, $attr );
 
-
-        // 	'value'				=>
-        // 		isset( $attr['value'] )
-        // 		? $attr['value']
-        // 		: isset( $attr['default'] ) ? $attr['default'] : '',
-
-//        isset( $attr['value'] )
-//            ? $attr['value']
-//            : isset( $attr['default'] ) ? $attr['default'] : '';
-        d( checked( $attr['value'], true, false ) );
-
-		if ( isset( $instance[ $attr['id'] ] ) ) {
-			$attr['value'] = $instance[ $attr['id'] ];
-		}
+        $attr['value'] = $this->set_value( $attr, $instance );
 
 		$excluded = [
 			'label',
@@ -143,6 +174,52 @@ class Fields implements Fields_Interface {
                 ->render( $this->exclude_attrs( $attr, $excluded ) )
 		);
 	}
+
+    /**
+     * Create the Field Checkbox
+     *
+     * @access public
+     * @param  array  $key The key of field's array to create the HTML field.
+     * @param  string $out The HTML form output.
+     * @return string      Return the HTML Field Checkbox
+     */
+    public function checkbox( array $key, $out = '' ) {
+
+        $out .= ' <input type="checkbox" ';
+
+        if ( isset( $key['class'] ) ) {
+            $out .= 'class="' . esc_attr( $key['class'] ) . '" ';
+        }
+
+        $out .= 'id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" value="1" ';
+
+        // if ( ( isset( $key['value'] ) && '1' === $key['value'] ) || ( ! isset( $key['value'] ) && 1 === $key['default'] ) ) {
+        // 	$out .= ' checked="checked" ';
+        // }
+
+        if ( ( ! isset( $key['value'] ) && ! empty( $key['default'] ) ) || ( isset( $key['value']  ) && ! empty( $key['value'] ) ) ) {
+            $out .= ' checked="checked" ';
+        }
+
+        /**
+         * Da vedere se utilizzabile per fare il controllo sulle checkbox.
+         * if ( isset( $key['value'] ) && 'true' === $key['value'] ) {
+         * 	$key['value'] = true;
+         * 	} else $key['value'] = false;
+         *
+         * $out .= checked( $key['value'], true );
+         */
+
+        $out .= ' /> ';
+
+        $out .= $this->label( $key['name'], $key['_id'], false );
+
+        if ( isset( $key['desc'] ) ) {
+            $out .= $this->description( $key['desc'] );
+        }
+
+        return $out;
+    }
 
 	/**
 	 * Render View
@@ -260,19 +337,6 @@ class Fields implements Fields_Interface {
 			$this->concat_attrs($attr, ['desc', 'js_dependencies']),
 			$attr['desc']
 		);
-	}
-
-	/**
-	 * Get value of the field
-	 *
-	 * @param  array $attr
-	 * @return string|int|bool
-	 */
-	public function set_value( array $attr ) {
-	
-		return isset( $attr['value'] )
-			? $attr['value']
-			: isset( $attr['default'] ) ? $attr['default'] : '';
 	}
 
 	/**
@@ -513,52 +577,6 @@ class Fields implements Fields_Interface {
 
 		if ( isset( $key['desc'] ) ) {
 			$out .= $this->description( $key['desc'] ); }
-
-		return $out;
-	}
-
-	/**
-	 * Create the Field Checkbox
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Checkbox
-	 */
-	public function checkbox( array $key, $out = '' ) {
-
-		$out .= ' <input type="checkbox" ';
-
-		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" ';
-		}
-
-		$out .= 'id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" value="1" ';
-
-		// if ( ( isset( $key['value'] ) && '1' === $key['value'] ) || ( ! isset( $key['value'] ) && 1 === $key['default'] ) ) {
-		// 	$out .= ' checked="checked" ';
-		// }
-
-		if ( ( ! isset( $key['value'] ) && ! empty( $key['default'] ) ) || ( isset( $key['value']  ) && ! empty( $key['value'] ) ) ) {
-			$out .= ' checked="checked" ';
-		}
-
-		/**
-		 * Da vedere se utilizzabile per fare il controllo sulle checkbox.
-		 * if ( isset( $key['value'] ) && 'true' === $key['value'] ) {
-		 * 	$key['value'] = true;
-		 * 	} else $key['value'] = false;
-		 *
-		 * $out .= checked( $key['value'], true );
-		 */
-
-		$out .= ' /> ';
-
-		$out .= $this->label( $key['name'], $key['_id'], false );
-
-		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] );
-		}
 
 		return $out;
 	}

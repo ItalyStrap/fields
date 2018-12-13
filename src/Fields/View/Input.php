@@ -11,20 +11,20 @@ use ItalyStrap\HTML;
  */
 class Input extends Abstract_View {
 
-    /**
-     * @param ElementInterface $attr
-     *
-     * @return string
-     */
-    public function render( array $attr ) {
+	/**
+	 * @param ElementInterface $attr
+	 *
+	 * @return string
+	 */
+	public function render( array $attr ) {
 
-        $this->elements = array_merge( $this->elements, $attr );
+		$this->elements = array_merge( $this->elements, $attr );
 
-        return sprintf(
-            '%s<input%s/>%s',
-            $this->label(),
-            HTML\get_attr( 'input', $attr ),
-            $this->description()
-        );
-    }
+		return sprintf(
+			'%s<input%s/>%s',
+			$this->label(),
+			HTML\get_attr( 'input', $attr ),
+			$this->description()
+		);
+	}
 }
