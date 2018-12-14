@@ -35,25 +35,35 @@ if ( is_admin() ) {
 	return;
 }
 
+echo '<form action="">';
+
 function fields_example() {
 
 	$fields = new \ItalyStrap\Fields\Fields();
+
+	$attr = array(
+		'type'			=> 'editor',
+		'value'		    => 'Default value',
+	);
+
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'textarea',
 //		'default'		=> 'Default value',
 	);
 
-	print $fields->render( $attr );
-	d( $fields->render( $attr ) );
+//	print $fields->render( $attr );
+//	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'textarea',
 		'value'		    => 'Default value',
 	);
 
-	print $fields->render( $attr );
-	d( $fields->render( $attr ) );
+//	print $fields->render( $attr );
+//	d( $fields->render( $attr ) );
 
 	// $fields->add_type( 'closure', function () {} );
 	// $fields->add_type( 'closure', function () {} );
@@ -218,13 +228,7 @@ function fields_example() {
 
 	// d( $fields->render( $text, [] ) );
 
-?>
-
-<form action="">
-	<?php // echo $fields->render( $text ); ?>
-</form>
-
-<?php
+    echo '</form>';
 }
 
 add_action( 'wp_footer', 'fields_example' );

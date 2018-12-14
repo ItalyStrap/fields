@@ -213,6 +213,26 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertNotContains( 'value="' . $attr['value'] . '"', $html );
 	}
 
+	/**
+	 * @test
+	 * it_should_be_type_editor
+	 */
+	public function it_should_be_type_editor() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'editor',
+			'id'	=> 'foo',
+			'value'	=> 'Some text',
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'class="wp-editor-container"', $html );
+		$this->assertContains( 'id="foo"', $html );
+		$this->assertContains( 'name="foo"', $html );
+		$this->assertContains( '>Some text</textarea>', $html );
+	}
+
 	private function get_html( $cb ) {
 		$sut = $this->make_instance();
 		$attr[ 'type' ] = 'text';
