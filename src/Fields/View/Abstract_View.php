@@ -8,6 +8,24 @@ class Abstract_View {
 
     protected $elements = [];
 
+	/**
+	 * @param ElementInterface $attr
+	 *
+	 * @return string
+	 */
+	public function render( array $attr ) {
+		$this->elements = array_merge( $this->elements, $attr );
+		return $this->maybe_render( $attr );
+    }
+
+	/**
+	 * @param array $attr
+	 * @return mixed
+	 */
+	protected function maybe_render( array $attr ){
+		return '';
+	}
+
     public function with( $key, $value )
     {
         $this->elements[ $key ] = $value;

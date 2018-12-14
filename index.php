@@ -42,12 +42,28 @@ function fields_example() {
 	$fields = new \ItalyStrap\Fields\Fields();
 
 	$attr = array(
-		'type'			=> 'editor',
-		'value'		    => 'Default value',
+		'type'			=> 'select',
+		'id'            => 'select',
+		'options'		=> [
+		        'key'   => 'value',
+		        'key1'   => 'value',
+		        'key2'   => 'value',
+		        'key3'   => 'value',
+        ],
 	);
 
-	print $fields->render( $attr );
-	d( $fields->render( $attr ) );
+	$instance['select'] = 'key1';
+
+	print $fields->render( $attr, $instance );
+	d( $fields->render( $attr, $instance ) );
+
+//	$attr = array(
+//		'type'			=> 'editor',
+//		'value'		    => 'Default value',
+//	);
+//
+//	print $fields->render( $attr );
+//	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'textarea',

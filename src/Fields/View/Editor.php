@@ -12,13 +12,11 @@ use ItalyStrap\HTML;
 class Editor extends Abstract_View {
 
 	/**
-	 * @param ElementInterface $attr
+	 * @param array $attr
 	 *
 	 * @return string
 	 */
-	public function render( array $attr ) {
-
-		$this->elements = array_merge( $this->elements, $attr );
+	protected function maybe_render( array $attr ) {
 
 		$settings = [
 			'textarea_name' => $attr['name'],

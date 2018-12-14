@@ -415,6 +415,29 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		}
 	}
 
+	/**
+	 * @test
+	 * it_should_be_type_select
+	 */
+	public function it_should_be_type_select() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'		=> 'select',
+			'id'		=> 'foo',
+			'options'	=> [
+				'value'	=> 'Title',
+			],
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( '<select', $html );
+		$this->assertContains( 'id="foo"', $html );
+		$this->assertContains( 'name="foo"', $html );
+		$this->assertContains( '<option value="value"', $html );
+		$this->assertContains( 'Title</option>', $html );
+	}
+
     /**
      * Get fields_type output
      */

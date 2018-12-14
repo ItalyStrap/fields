@@ -20,11 +20,6 @@ use InvalidArgumentException;
 class Fields implements Fields_Interface {
 
 	private $types = [
-        'editor'			=> '\ItalyStrap\Fields\View\Editor',
-        'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
-
-        'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
-
         'button'			=> '\ItalyStrap\Fields\View\Input',
         'color'				=> '\ItalyStrap\Fields\View\Input',
         'date'				=> '\ItalyStrap\Fields\View\Input',
@@ -45,27 +40,14 @@ class Fields implements Fields_Interface {
         'time'				=> '\ItalyStrap\Fields\View\Input',
         'url'				=> '\ItalyStrap\Fields\View\Input',
         'week'				=> '\ItalyStrap\Fields\View\Input',
+
+		'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
+
+		'editor'			=> '\ItalyStrap\Fields\View\Editor',
+		'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
+
+		'select'			=> '\ItalyStrap\Fields\View\Select',
 	];
-
-	/**
-	 * add type
-	 *
-	 * @param  string $value [description]
-	 * @return string        [description]
-	 */
-	private function add_type( $type, $content = null ) {
-		$this->types[ $type ] = $content;
-	}
-
-	/**
-	 * add type
-	 *
-	 * @param  string $value [description]
-	 * @return string        [description]
-	 */
-	private function get_type( $type ) {
-		return $this->types[ $type ];
-	}
 
     /**
      * Get all types
@@ -150,7 +132,7 @@ class Fields implements Fields_Interface {
 			'type'		=> 'text',
 			'id'		=> $defaul_ID,
 			'name'		=> $defaul_ID,
-//			'default'	=> '',
+//			'default'	=> '', // Deprecated
 			'class-p'	=> '', // Deprecated
 			'label'	    => '',
 			'desc'	    => '',
@@ -217,140 +199,6 @@ class Fields implements Fields_Interface {
         //         'RenderableElementInterface::class'
         //     )
         // );
-	}
-
-	/**
-	 * Create the field label
-	 *
-	 * @param  string $label The labels name.
-	 * @param  string $for   The labels ID.
-	 *
-	 * @return string       Return the labels
-	 */
-	public function label( $label = '', $for = '' ) {
-
-		if ( empty( $label ) ) {
-			return '';
-		}
-
-		return sprintf(
-			'<label%s>%s</label>',
-			HTML\get_attr( $for, [ 'for' => $for ] ),
-			esc_html( $label )
-		);
-	}
-
-	/**
-	 * Get element with image for media fields
-	 *
-	 * @param  int $id The ID of the image.
-	 * @param  string $text The text.
-	 * @return string        The HTML of the element with image
-	 */
-	public function get_el_media_field( $id ) {
-	
-		$attr = array(
-			'data-id'	=> $id,
-		);
-		$output = wp_get_attachment_image( $id , 'thumbnail', false, $attr );
-
-		if ( '' === $output ) {
-			$id = (int) get_post_thumbnail_id( $id );
-			$output = wp_get_attachment_image( $id , 'thumbnail', false, $attr );
-		}
-
-		if ( $output ) {
-			echo '<li class="carousel-image ui-state-default"><div><i class="dashicons dashicons-no"></i>' . $output . '</div></li>';// XSS ok.
-		}
-	}
-
-	/**
-	 * Create the Field Media
-	 * This field add a single image
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Text
-	 */
-	public function media( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'text',
-		);
-
-		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-
-		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
-
-		ob_start();
-
-		?>
-			<h5><?php echo $key['desc']; ?></h5>
-			<hr>
-			<div class="media_carousel_sortable">
-				<ul class="carousel_images" style="text-align:center">
-				<?php
-				if ( ! empty( $value ) ) {
-					$this->get_el_media_field( absint( $value ) );
-				} ?>
-				</ul>
-			</div>
-			<span style="clear:both;"></span>
-			<input class="upload_single_image_button button button-primary widefat" type="button" value="<?php esc_attr_e( 'Add image', 'italystrap' ); ?>" />
-		<hr>
-		<?php
-
-		$out .= ob_get_contents();
-		ob_end_clean();
-
-		return $out;
-	}
-
-	/**
-	 * Create the Field Media List
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Text
-	 */
-	public function media_list( array $key, $out = '' ) {
-
-		$attr = array(
-			'type'	=> 'text',
-		);
-
-		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
-
-		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
-
-		ob_start();
-
-		?>
-			<h5><?php esc_attr_e( 'Add your images', 'italystrap' ); ?></h5>
-			<hr>
-			<div class="media_carousel_sortable">
-				<ul id="sortable" class="carousel_images">
-				<?php if ( ! empty( $value ) ) : ?>
-					<?php
-					$ids = explode( ',', $value );
-
-					foreach ( $ids as $id ) :
-						$this->get_el_media_field( $id );
-					endforeach; ?>
-				<?php endif; ?>
-				</ul>
-			</div>
-			<span style="clear:both;"></span>
-			<input class="upload_carousel_image_button button button-primary widefat" type="button" value="<?php esc_attr_e( 'Add images', 'italystrap' ); ?>" />
-		<hr>
-		<?php
-
-		$out .= ob_get_contents();
-		ob_end_clean();
-
-		return $out;
 	}
 
 	/**
@@ -597,6 +445,27 @@ class Fields implements Fields_Interface {
 	}
 
 	/**
+	 * Create the field label
+	 *
+	 * @param  string $label The labels name.
+	 * @param  string $for   The labels ID.
+	 *
+	 * @return string       Return the labels
+	 */
+	public function label( $label = '', $for = '' ) {
+
+		if ( empty( $label ) ) {
+			return '';
+		}
+
+		return sprintf(
+			'<label%s>%s</label>',
+			HTML\get_attr( $for, [ 'for' => $for ] ),
+			esc_html( $label )
+		);
+	}
+
+	/**
 	 * Create the field description
 	 *
 	 * @access public
@@ -615,6 +484,119 @@ class Fields implements Fields_Interface {
 			wp_kses_post( $desc )
 		);
 
+	}
+
+	/**
+	 * Get element with image for media fields
+	 *
+	 * @param  int $id The ID of the image.
+	 * @param  string $text The text.
+	 * @return string        The HTML of the element with image
+	 */
+	public function get_el_media_field( $id ) {
+
+		$attr = array(
+			'data-id'	=> $id,
+		);
+		$output = wp_get_attachment_image( $id , 'thumbnail', false, $attr );
+
+		if ( '' === $output ) {
+			$id = (int) get_post_thumbnail_id( $id );
+			$output = wp_get_attachment_image( $id , 'thumbnail', false, $attr );
+		}
+
+		if ( $output ) {
+			echo '<li class="carousel-image ui-state-default"><div><i class="dashicons dashicons-no"></i>' . $output . '</div></li>';// XSS ok.
+		}
+	}
+
+	/**
+	 * Create the Field Media
+	 * This field add a single image
+	 *
+	 * @access public
+	 * @param  array  $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 * @return string      Return the HTML Field Text
+	 */
+	public function media( array $key, $out = '' ) {
+
+		$attr = array(
+			'type'	=> 'text',
+		);
+
+		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+
+		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
+
+		ob_start();
+
+		?>
+        <h5><?php echo $key['desc']; ?></h5>
+        <hr>
+        <div class="media_carousel_sortable">
+            <ul class="carousel_images" style="text-align:center">
+				<?php
+				if ( ! empty( $value ) ) {
+					$this->get_el_media_field( absint( $value ) );
+				} ?>
+            </ul>
+        </div>
+        <span style="clear:both;"></span>
+        <input class="upload_single_image_button button button-primary widefat" type="button" value="<?php esc_attr_e( 'Add image', 'italystrap' ); ?>" />
+        <hr>
+		<?php
+
+		$out .= ob_get_contents();
+		ob_end_clean();
+
+		return $out;
+	}
+
+	/**
+	 * Create the Field Media List
+	 *
+	 * @access public
+	 * @param  array  $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 * @return string      Return the HTML Field Text
+	 */
+	public function media_list( array $key, $out = '' ) {
+
+		$attr = array(
+			'type'	=> 'text',
+		);
+
+		$out = $this->label( $key['name'], $key['_id'] ) . $this->input( $attr, $key );
+
+		$value = isset( $key['value'] ) ? esc_attr( $key['value'] ) : '';
+
+		ob_start();
+
+		?>
+        <h5><?php esc_attr_e( 'Add your images', 'italystrap' ); ?></h5>
+        <hr>
+        <div class="media_carousel_sortable">
+            <ul id="sortable" class="carousel_images">
+				<?php if ( ! empty( $value ) ) : ?>
+					<?php
+					$ids = explode( ',', $value );
+
+					foreach ( $ids as $id ) :
+						$this->get_el_media_field( $id );
+					endforeach; ?>
+				<?php endif; ?>
+            </ul>
+        </div>
+        <span style="clear:both;"></span>
+        <input class="upload_carousel_image_button button button-primary widefat" type="button" value="<?php esc_attr_e( 'Add images', 'italystrap' ); ?>" />
+        <hr>
+		<?php
+
+		$out .= ob_get_contents();
+		ob_end_clean();
+
+		return $out;
 	}
 
 	/**
@@ -776,5 +758,25 @@ class Fields implements Fields_Interface {
 				return is_callable( $mixed );
 				// break;
 		}
+	}
+
+	/**
+	 * add type
+	 *
+	 * @param  string $value [description]
+	 * @return string        [description]
+	 */
+	private function add_type( $type, $content = null ) {
+		$this->types[ $type ] = $content;
+	}
+
+	/**
+	 * add type
+	 *
+	 * @param  string $value [description]
+	 * @return string        [description]
+	 */
+	private function get_type( $type ) {
+		return $this->types[ $type ];
 	}
 }

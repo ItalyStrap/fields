@@ -12,15 +12,13 @@ use ItalyStrap\HTML;
 class Checkbox extends Abstract_View {
 
 	/**
-	 * @param ElementInterface $attr
+	 * @param array $attr
 	 *
 	 * @return string
 	 */
-	public function render( array $attr ) {
+	protected function maybe_render( array $attr ) {
 
-		$this->elements = array_merge( $this->elements, $attr );
-
-        if ( ! empty( $attr['value'] ) ) {
+		if ( ! empty( $attr['value'] ) ) {
 			$attr['checked'] = 'checked';
 		}
 
