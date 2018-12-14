@@ -28,6 +28,7 @@ class Textarea extends Abstract_View {
 		$attr = array_merge( $default, $attr );
 
 		$value = $attr['value'];
+		unset( $attr['value'] );
 
 		return sprintf(
 			'%s<textarea%s/>%s</textarea>%s',

@@ -210,6 +210,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertContains( 'id="foo"', $html );
 		$this->assertContains( 'name="foo"', $html );
 		$this->assertContains( '>Some text</textarea>', $html );
+		$this->assertNotContains( 'value="' . $attr['value'] . '"', $html );
 	}
 
 	private function get_html( $cb ) {
