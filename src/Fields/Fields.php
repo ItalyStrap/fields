@@ -160,7 +160,7 @@ class Fields implements Fields_Interface {
 		$excluded = [
 			'label',
 			'desc',
-			'default',
+			'default', // Deprecated
 			'class-p', // Deprecated
 			'validate',
 			'sanitize',
@@ -181,52 +181,6 @@ class Fields implements Fields_Interface {
                 ->render( $this->exclude_attrs( $attr, $excluded ) )
 		);
 	}
-
-    /**
-     * Create the Field Checkbox
-     *
-     * @access public
-     * @param  array  $key The key of field's array to create the HTML field.
-     * @param  string $out The HTML form output.
-     * @return string      Return the HTML Field Checkbox
-     */
-    public function checkbox( array $key, $out = '' ) {
-
-        $out .= ' <input type="checkbox" ';
-
-        if ( isset( $key['class'] ) ) {
-            $out .= 'class="' . esc_attr( $key['class'] ) . '" ';
-        }
-
-        $out .= 'id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" value="1" ';
-
-        // if ( ( isset( $key['value'] ) && '1' === $key['value'] ) || ( ! isset( $key['value'] ) && 1 === $key['default'] ) ) {
-        // 	$out .= ' checked="checked" ';
-        // }
-
-        if ( ( ! isset( $key['value'] ) && ! empty( $key['default'] ) ) || ( isset( $key['value']  ) && ! empty( $key['value'] ) ) ) {
-            $out .= ' checked="checked" ';
-        }
-
-        /**
-         * Da vedere se utilizzabile per fare il controllo sulle checkbox.
-         * if ( isset( $key['value'] ) && 'true' === $key['value'] ) {
-         * 	$key['value'] = true;
-         * 	} else $key['value'] = false;
-         *
-         * $out .= checked( $key['value'], true );
-         */
-
-        $out .= ' /> ';
-
-        $out .= $this->label( $key['name'], $key['_id'], false );
-
-        if ( isset( $key['desc'] ) ) {
-            $out .= $this->description( $key['desc'] );
-        }
-
-        return $out;
-    }
 
 	/**
 	 * Render View
@@ -344,6 +298,52 @@ class Fields implements Fields_Interface {
 			$this->concat_attrs($attr, ['desc', 'js_dependencies']),
 			$attr['desc']
 		);
+	}
+
+	/**
+	 * Create the Field Checkbox
+	 *
+	 * @access public
+	 * @param  array  $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 * @return string      Return the HTML Field Checkbox
+	 */
+	public function checkbox( array $key, $out = '' ) {
+
+		$out .= ' <input type="checkbox" ';
+
+		if ( isset( $key['class'] ) ) {
+			$out .= 'class="' . esc_attr( $key['class'] ) . '" ';
+		}
+
+		$out .= 'id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" value="1" ';
+
+		// if ( ( isset( $key['value'] ) && '1' === $key['value'] ) || ( ! isset( $key['value'] ) && 1 === $key['default'] ) ) {
+		// 	$out .= ' checked="checked" ';
+		// }
+
+		if ( ( ! isset( $key['value'] ) && ! empty( $key['default'] ) ) || ( isset( $key['value']  ) && ! empty( $key['value'] ) ) ) {
+			$out .= ' checked="checked" ';
+		}
+
+		/**
+		 * Da vedere se utilizzabile per fare il controllo sulle checkbox.
+		 * if ( isset( $key['value'] ) && 'true' === $key['value'] ) {
+		 * 	$key['value'] = true;
+		 * 	} else $key['value'] = false;
+		 *
+		 * $out .= checked( $key['value'], true );
+		 */
+
+		$out .= ' /> ';
+
+		$out .= $this->label( $key['name'], $key['_id'], false );
+
+		if ( isset( $key['desc'] ) ) {
+			$out .= $this->description( $key['desc'] );
+		}
+
+		return $out;
 	}
 
 	/**

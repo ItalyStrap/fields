@@ -20,12 +20,9 @@ class Checkbox extends Abstract_View {
 
 		$this->elements = array_merge( $this->elements, $attr );
 
-        if (
-        	( ! isset( $attr['value'] ) && ! empty( $attr['default'] ) )
-			|| ( isset( $attr['value']  ) && ! empty( $attr['value'] ) )
-		) {
+        if ( isset( $attr['value']  ) && ! empty( $attr['value'] ) ) {
 			$attr['checked'] = 'checked';
-        }
+		}
 
 		return sprintf(
 			'<input%s/>%s%s',

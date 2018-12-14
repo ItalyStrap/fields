@@ -107,8 +107,8 @@ function fields_example() {
             'default'   => 2,
     ];
 
-//    print $fields->render( $attr );
-//    d( $fields->render( $attr ) );
+    print $fields->render( $attr );
+    d( $fields->render( $attr ) );
 
     $attr = [
             'type'  => 'checkbox',
