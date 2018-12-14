@@ -179,7 +179,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * @test
-	 * it_should_be_hidden
+	 * it_should_be_type_checkbox
 	 */
 	public function it_should_be_type_checkbox() {
 
@@ -190,6 +190,26 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$html = $sut->render( $attr );
 
 		$this->assertContains( 'type="checkbox"', $html );
+	}
+
+	/**
+	 * @test
+	 * it_should_be_type_textarea
+	 */
+	public function it_should_be_type_textarea() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'textarea',
+			'id'	=> 'foo',
+			'value'	=> 'Some text',
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'type="textarea"', $html );
+		$this->assertContains( 'id="foo"', $html );
+		$this->assertContains( 'name="foo"', $html );
+		$this->assertContains( '>Some text</textarea>', $html );
 	}
 
 	private function get_html( $cb ) {

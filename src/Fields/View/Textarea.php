@@ -9,7 +9,7 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Checkbox extends Abstract_View {
+class Textarea extends Abstract_View {
 
 	/**
 	 * @param ElementInterface $attr
@@ -20,14 +20,20 @@ class Checkbox extends Abstract_View {
 
 		$this->elements = array_merge( $this->elements, $attr );
 
-        if ( ! empty( $attr['value'] ) ) {
-			$attr['checked'] = 'checked';
-		}
+		$default = [
+			'cols'  => '60',
+			'rows'  => '10',
+		];
+
+		$attr = array_merge( $default, $attr );
+
+		$value = $attr['value'];
 
 		return sprintf(
-			'<input%s/>%s%s',
-			HTML\get_attr( 'input', $attr ),
+			'%s<textarea%s/>%s</textarea>%s',
 			$this->label(),
+			HTML\get_attr( 'input', $attr ),
+			esc_textarea( $value ),
 			$this->description()
 		);
 	}

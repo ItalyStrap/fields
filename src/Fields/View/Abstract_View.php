@@ -34,7 +34,7 @@ class Abstract_View {
      *
      * @return string       Return the label
      */
-    protected function label (){
+    protected function label(){
         return $this->render_tag( 'label', ['for' => (string) $this->get('id') ] );
     }
 
@@ -43,7 +43,7 @@ class Abstract_View {
      *
      * @return string       Return the description
      */
-    protected function description (){
+    protected function description(){
         return $this->render_tag( 'desc', ['class' => 'description'] );
     }
 

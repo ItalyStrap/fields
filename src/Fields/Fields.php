@@ -20,6 +20,8 @@ use InvalidArgumentException;
 class Fields implements Fields_Interface {
 
 	private $types = [
+        'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
+
         'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
 
         'button'			=> '\ItalyStrap\Fields\View\Input',
@@ -128,7 +130,8 @@ class Fields implements Fields_Interface {
 		/**
 		 * Questo lo setto con il default perché
 		 * i widget per esempio settano il name con [id]
-		 * così non devo fare nessun check
+		 * così non devo fare nessun check e durante il merge
+         * verrà sovrascritto.
          *
          * Nei setting ID e name sono così:
          * id="italystrap_settings[show-ids]"
@@ -141,13 +144,12 @@ class Fields implements Fields_Interface {
          * L'attributo for delle label è sempre associato all'ID
          * della input.
 		 */
-		$defaul_ID = uniqid();
-		$defaul_name = $defaul_ID;
+		$defaul_ID = isset( $attr['id'] ) ? $attr['id'] : uniqid();
 		$default = [
 			'type'		=> 'text',
 			'id'		=> $defaul_ID,
-			'name'		=> $defaul_name,
-			'default'	=> '',
+			'name'		=> $defaul_ID,
+//			'default'	=> '',
 			'class-p'	=> '', // Deprecated
 			'label'	    => '',
 			'desc'	    => '',
@@ -235,6 +237,66 @@ class Fields implements Fields_Interface {
 			HTML\get_attr( $for, [ 'for' => $for ] ),
 			esc_html( $label )
 		);
+	}
+
+	/**
+	 * Handles outputting an 'textarea' element
+	 *
+	 * @since  2.0.0
+	 * @param  array $attr Override arguments.
+	 * @param  array $key Override arguments.
+	 *
+	 * @return string      Form textarea element
+	 */
+	// public function textarea( array $attr = array(), array $key = array() ) {
+	// 	$a = wp_parse_args( $attr, array(
+	// 		'class' => esc_attr( isset( $key['class'] ) ? $key['class'] : '' ),
+	// 		'name'  => esc_attr( $key['_name'] ),
+	// 		'id'    => esc_attr( $key['_id'] ),
+	// 		'cols'  => '60',
+	// 		'rows'  => '10',
+	// 		'value' => esc_attr( isset( $key['value'] ) ? $key['value'] : ( isset( $key['default'] ) ? $key['default'] : '' ) ),
+	// 		'desc'  => $this->field_type_description( $key['desc'] ),
+	// 	) );
+	// 	return sprintf( '<textarea%s>%s</textarea>%s', $this->concat_attrs( $a, array( 'desc', 'value' ) ), $a['value'], $a['desc'] );
+	// }
+
+	/**
+	 * Create the Field Textarea
+	 *
+	 * @access public
+	 * @param  array  $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 * @return string      Return the HTML Field Textarea
+	 */
+	public function textarea( array $key, $out = '' ) {
+		$out .= $this->label( $key['name'], $key['_id'] );
+
+		$out .= '<textarea ';
+
+		if ( isset( $key['class'] ) ) {
+			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
+
+		if ( isset( $key['rows'] ) ) {
+			$out .= 'rows="' . esc_attr( $key['rows'] ) . '" '; }
+
+		if ( isset( $key['cols'] ) ) {
+			$out .= 'cols="' . esc_attr( $key['cols'] ) . '" '; }
+
+		if ( isset( $key['placeholder'] ) ) {
+			$out .= 'placeholder="' . esc_attr( $key['placeholder'] ) . '" ';
+		}
+
+		$value = isset( $key['value'] ) ? $key['value'] : $key['default'];
+
+		$out .= 'id="'. esc_attr( $key['_id'] ) .'" name="' . esc_attr( $key['_name'] ) . '">' . esc_textarea( $value );
+
+		$out .= '</textarea>';
+
+		if ( isset( $key['desc'] ) ) {
+			$out .= $this->description( $key['desc'] ); }
+
+		return $out;
 	}
 
 	/**
@@ -524,66 +586,6 @@ class Fields implements Fields_Interface {
 
 		$out .= ob_get_contents();
 		ob_end_clean();
-
-		return $out;
-	}
-
-	/**
-	 * Handles outputting an 'textarea' element
-	 *
-	 * @since  2.0.0
-	 * @param  array $attr Override arguments.
-	 * @param  array $key Override arguments.
-	 *
-	 * @return string      Form textarea element
-	 */
-	// public function textarea( array $attr = array(), array $key = array() ) {
-	// 	$a = wp_parse_args( $attr, array(
-	// 		'class' => esc_attr( isset( $key['class'] ) ? $key['class'] : '' ),
-	// 		'name'  => esc_attr( $key['_name'] ),
-	// 		'id'    => esc_attr( $key['_id'] ),
-	// 		'cols'  => '60',
-	// 		'rows'  => '10',
-	// 		'value' => esc_attr( isset( $key['value'] ) ? $key['value'] : ( isset( $key['default'] ) ? $key['default'] : '' ) ),
-	// 		'desc'  => $this->field_type_description( $key['desc'] ),
-	// 	) );
-	// 	return sprintf( '<textarea%s>%s</textarea>%s', $this->concat_attrs( $a, array( 'desc', 'value' ) ), $a['value'], $a['desc'] );
-	// }
-
-	/**
-	 * Create the Field Textarea
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Textarea
-	 */
-	public function textarea( array $key, $out = '' ) {
-		$out .= $this->label( $key['name'], $key['_id'] );
-
-		$out .= '<textarea ';
-
-		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
-
-		if ( isset( $key['rows'] ) ) {
-			$out .= 'rows="' . esc_attr( $key['rows'] ) . '" '; }
-
-		if ( isset( $key['cols'] ) ) {
-			$out .= 'cols="' . esc_attr( $key['cols'] ) . '" '; }
-
-		if ( isset( $key['placeholder'] ) ) {
-			$out .= 'placeholder="' . esc_attr( $key['placeholder'] ) . '" ';
-		}
-
-		$value = isset( $key['value'] ) ? $key['value'] : $key['default'];
-
-		$out .= 'id="'. esc_attr( $key['_id'] ) .'" name="' . esc_attr( $key['_name'] ) . '">' . esc_textarea( $value );
-
-		$out .= '</textarea>';
-
-		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
 
 		return $out;
 	}

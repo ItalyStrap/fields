@@ -39,6 +39,22 @@ function fields_example() {
 
 	$fields = new \ItalyStrap\Fields\Fields();
 
+	$attr = array(
+		'type'			=> 'textarea',
+//		'default'		=> 'Default value',
+	);
+
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
+
+	$attr = array(
+		'type'			=> 'textarea',
+		'value'		    => 'Default value',
+	);
+
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
+
 	// $fields->add_type( 'closure', function () {} );
 	// $fields->add_type( 'closure', function () {} );
 //d( $fields->get_all_types() );
@@ -107,8 +123,8 @@ function fields_example() {
             'default'   => 2,
     ];
 
-    print $fields->render( $attr );
-    d( $fields->render( $attr ) );
+//    print $fields->render( $attr );
+//    d( $fields->render( $attr ) );
 
     $attr = [
             'type'  => 'checkbox',
@@ -129,8 +145,8 @@ function fields_example() {
     ];
 
 
-    print $fields->render( $attr );
-    d( $attr['id'], $fields->render( $attr ) );
+//    print $fields->render( $attr );
+//    d( $attr['id'], $fields->render( $attr ) );
 
 //    $label = [
 //            'label' => 'Label Title',
