@@ -19,7 +19,7 @@ class Checkbox extends Abstract_View {
 	public function render( array $attr ) {
 
 		$this->elements = array_merge( $this->elements, $attr );
-d( $attr['value'] );
+
         if (
         	( ! isset( $attr['value'] ) && ! empty( $attr['default'] ) )
 			|| ( isset( $attr['value']  ) && ! empty( $attr['value'] ) )

@@ -164,6 +164,34 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $this->assertContains( 'type="' . $type . '"', $html );
     }
 
+	/**
+	 * @test
+	 * it_should_be_hidden
+	 */
+	public function it_should_be_type_text_by_default() {
+
+		$sut = $this->make_instance();
+		$html = $sut->render( ['type' => null ] );
+
+//        $this->assertContains( 'type="text"', $html );
+		$this->assertContains( '<input', $html );
+	}
+
+	/**
+	 * @test
+	 * it_should_be_hidden
+	 */
+	public function it_should_be_type_checkbox() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'checkbox'
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'type="checkbox"', $html );
+	}
+
 	private function get_html( $cb ) {
 		$sut = $this->make_instance();
 		$attr[ 'type' ] = 'text';
@@ -220,19 +248,6 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
     /**
      * @test
-     * it_should_be_hidden
-     */
-    public function it_should_be_type_text() {
-
-        $sut = $this->make_instance();
-        $html = $sut->render( ['type' => null ] );
-
-//        $this->assertContains( 'type="text"', $html );
-        $this->assertContains( '<input', $html );
-    }
-
-    /**
-     * @test
      */
     public function it_should_have_label()
     {
@@ -282,81 +297,81 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     }
 
 	/**
-	 * @test
-	 * it_should_be_hidden
+	 * @return array
 	 */
-	public function it_should_be_type_checkbox() {
-
-		$sut = $this->make_instance();
-		$attr = [
-			'type'	=> 'checkbox'
+	public function checkbox_val_provider() {
+		/**
+		 * default|value|instance
+		 */
+		return [
+			/**
+			 * Settato solo il valore di default
+			 * la checkbox è spuntata
+			 */
+			[ 1, null, null ],
+			[ '1', null, null ],
+			[ true, null, null ],
+			[ 'on', null, null ],
+			[ 'vero', null, null ],
+			/**
+			 * Settato solo il valore di value
+			 * la checkbox è spuntata
+			 */
+			[ null, 1, null ],
+			[ null, '1', null ],
+			[ null, true, null ],
+			[ null, 'on', null ],
+			[ null, 'vero', null ],
+			/**
+			 * Settato solo instance
+			 * la checkbox è spuntata
+			 */
+			[ null, null, 1 ],
+			[ null, null, '1' ],
+			[ null, null, true ],
+			[ null, null, 'on' ],
+			[ null, null, 'vero' ],
+			/**
+			 * Se nulla è settato e la instance ritorna null o ""
+			 * NON mostro la spunta
+			 */
+			[ null, null, '' ],
+			[ null, null, null ],
+			/**
+			 * Se sono settati default e/o value ma la instance
+			 * è "" non c'è la spunta.
+			 */
+			[ '1', null, '' ],
+			[ null, '1', '' ],
+			[ '1', '1', '' ],
 		];
-		$html = $sut->render( $attr );
+	}
 
-		$this->assertContains( 'type="checkbox"', $html );
-		$this->assertNotContains( 'checked="checked"', $html );
-
-		// Is it checked?
+	private function get_checkbox( $default, $value, $instance_val ) {
+		$sut = $this->make_instance();
+		$attr[ 'type' ] = 'checkbox';
 
 		$id = 'checkbox_ID';
 		$attr['id'] = $id;
-		$instance[ $id ] = 1;
-		$html = $sut->render( $attr, $instance );
-		$this->assertContains( 'checked="checked"', $html );
-		unset($attr['id']);
-		unset($instance[ $id ]);
+		$attr['default'] = $default;
+		$attr['value'] = $value;
+		$instance[ $id ] = $instance_val;
+		return $sut->render( $attr, $instance );
+	}
 
+	/**
+	 * @test
+	 * it_should_be_checkbox_checked
+	 * @dataProvider  checkbox_val_provider
+	 */
+	public function it_should_be_checkbox_checked( $default, $value, $instance_val ) {
+		$needle = 'checked="checked"';
 
-		// Con la instance settata a valore true la
-		// checkbox è spuntata
-		$attr['id'] = $id;
-		$instance[ $id ] = 'on';
-		$html = $sut->render( $attr, $instance );
-		$this->assertContains( 'type="checkbox"', $html );
-		$this->assertContains( 'checked="checked"', $html );
-		unset($attr['id']);
-		unset($instance[ $id ]);
-
-		// Con default e instance settati con un valore true
-		// la checkbox è spuntata
-		$attr['id'] = $id;
-		$attr['default'] = 'on';
-		$instance[ $id ] = 'on';
-		$html = $sut->render( $attr, $instance );
-		$this->assertContains( 'checked="checked"', $html );
-		unset($attr['default']);
-		unset($instance[ $id ]);
-
-		// Se c'è il default ma è settato il valore da DB con '' (empty)
-		// non è spuntata la checkbox
-		$attr['id'] = $id;
-		$attr['default'] = 'on';
-		$instance[ $id ] = '';
-		$html = $sut->render( $attr, $instance );
-		$this->assertNotContains( 'checked="checked"', $html );
-		unset($attr['default']);
-		unset($instance[ $id ]);
-
-		//********
-
-		$attr = [
-			'type'  => 'checkbox',
-			'value'	=> 'on',
-		];
-
-		$html = $sut->render( $attr );
-		$this->assertContains( 'checked="checked"', $html );
-		unset($attr);
-
-		// Con valore di default e instance non è settato la checkbox ha la spunta
-		$attr = [
-			'type'  	=> 'checkbox',
-			'default'	=> 'on',
-		];
-
-		$html = $sut->render( $attr );
-		$this->assertContains( 'checked="checked"', $html );
-		unset($attr);
+		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
+			$this->assertNotContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
+		} else {
+			$this->assertContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
+		}
 	}
 
     /**
