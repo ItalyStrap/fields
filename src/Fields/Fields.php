@@ -47,6 +47,7 @@ class Fields implements Fields_Interface {
 		'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
 
 		'select'			=> '\ItalyStrap\Fields\View\Select',
+		'multiple_select'   => '\ItalyStrap\Fields\View\Select',
 	];
 
     /**

@@ -438,6 +438,102 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertContains( 'Title</option>', $html );
 	}
 
+	public function selected()
+	{
+		/**
+		 * multiple|value|instance_val
+		 */
+		return  [
+			[ true, null, null ],
+
+			[ true, '', null ],
+			[ true, 'key0', null ],
+			[ true, ['key0', 'key1'], null ],
+
+			[ true, 'key3', '' ],
+			[ true, 'key3', 'key0' ],
+			[ true, 'key3', ['key0', 'key1'] ],
+			[ true, ['key2','key3'], ['key0', 'key1'] ],
+
+			[ true, null, '' ],
+			[ true, null, 'key0' ],
+			[ true, null, ['key0', 'key1'] ],
+
+			[ false, null, null ],
+			[ false, '', null ],
+			[ false, 'key0', null ],
+
+			[ false, 'key3', '' ],
+			[ false, 'key3', 'key0' ],
+
+			[ false, null, '' ],
+			[ false, null, 'key0' ],
+//			[ false, '', ['key0', 'key1'] ], // Test da valutare
+		];
+	}
+
+	/**
+	 * @test
+	 * @dataProvider selected
+	 */
+	public function it_should_be_type_select_selected( $multiple, $value, $instance_val )
+	{
+		$id = uniqid();
+		$sut = $this->make_instance();
+		$attr = [
+			'type'		=> 'select',
+			'id'		=> $id,
+			'value'		=> $value,
+			'multiple'	=> $multiple, // Se false o null non verrà stampato
+			'options'	=> [
+				'key0'		=> 'value0',
+				'key1'		=> 'value1',
+				'key2'		=> 'value2',
+				'key3'		=> 'value3',
+			],
+		];
+		$instance[ $id ] = $instance_val;
+		$html = $sut->render( $attr, $instance );
+
+		/**
+		 * Il valore di instance ha la precedenza su tutto
+		 * Ovvero instance è il valore da DB che sovrascrive
+		 * un eventuale valore di default
+		 */
+		if ( isset( $instance_val ) ) {
+			$value = $instance_val;
+		}
+
+		/**
+		 * Multiple true
+		 * selected da default o instance
+		 *
+		 * Multiple false
+		 * selected da default o instance
+		 */
+		if ( $multiple ) {
+			$this->assertContains( 'multiple', $html );
+			if ( is_array( $value ) ) {
+				foreach ( $value as $k => $item ) {
+					$this->assertContains( '<option value="' . $item . '" selected="selected">', $html );
+				}
+			} elseif ( is_string( $value ) && ! empty( $value ) ) {
+				$this->assertContains( '<option value="' . $value . '" selected="selected">', $html );
+			} else {
+				$this->assertNotContains( '" selected="selected">', $html );
+			}
+
+		} else {
+			$this->assertNotContains( 'multiple', $html );
+			if ( empty( $value ) ) {
+				$this->assertNotContains( '" selected="selected">', $html );
+			} else {
+//				$this->assertIsString( $value );
+				$this->assertContains( '<option value="' . $value . '" selected="selected">', $html );
+			}
+		}
+	}
+
     /**
      * Get fields_type output
      */

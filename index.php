@@ -43,7 +43,11 @@ function fields_example() {
 
 	$attr = array(
 		'type'			=> 'select',
-		'id'            => 'select',
+		'id'            => 'jnjkk',
+		'value'         => ['key','key1'],
+		'size'          => '6',
+		'multiple'      => true,
+		'show_option_none' => true,
 		'options'		=> [
 		        'key'   => 'value',
 		        'key1'   => 'value',
@@ -52,7 +56,61 @@ function fields_example() {
         ],
 	);
 
-	$instance['select'] = 'key1';
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
+
+	$attr = array(
+		'type'			=> 'select',
+		'id'            => 'sel11',
+		'value'         => 'key1',
+		'size'          => '6',
+		'multiple'      => true,
+		'show_option_none' => true,
+		'options'		=> [
+		        'key'   => 'value',
+		        'key1'   => 'value',
+		        'key2'   => 'value',
+		        'key3'   => 'value',
+        ],
+	);
+
+	$instance['sel11'] = ['key1', 'key3'];
+
+	print $fields->render( $attr, $instance );
+	d( $fields->render( $attr, $instance ) );
+
+	$attr = array(
+		'type'			=> 'select',
+		'id'            => 'sel',
+		'size'          => '6',
+		'multiple'      => true,
+		'show_option_none' => true,
+		'options'		=> [
+		        'key'   => 'value',
+		        'key1'   => 'value',
+		        'key2'   => 'value',
+		        'key3'   => 'value',
+        ],
+	);
+
+	$instance['sel'] = ['key1', 'key3'];
+
+	print $fields->render( $attr, $instance );
+	d( $fields->render( $attr, $instance ) );
+
+	$attr = array(
+		'type'			=> 'select',
+		'id'            => 'select',
+		'show_option_none' => true,
+		'options'		=> [
+		        'key'   => 'value',
+		        'key1'   => 'value',
+		        'key2'   => 'value',
+		        'key3'   => 'value',
+        ],
+	);
+
+	$instance['select'] = 'key2';
 
 	print $fields->render( $attr, $instance );
 	d( $fields->render( $attr, $instance ) );
