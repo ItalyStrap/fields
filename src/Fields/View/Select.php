@@ -22,7 +22,21 @@ class Select extends Abstract_View {
 			$attr['options'] = [];
 		}
 
-//		'size="6" multiple> '
+		if ( isset( $attr['show_option_none'] ) ) {
+			$none = is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
+			// $attr['options'] = array_merge( array( 'none' => $none ), $attr['options'] );
+//			$html .= '<option value="0"> ' . esc_html( $none ) . '</option>';
+			// $html .= '<option  disabled selected> ' . esc_html( $none ) . '</option>';
+			$attr['options'] = [ $none ] + $attr['options'];
+		}
+
+		if ( strpos( $attr['type'], 'multiple' ) !== false ) {
+			$count = count( $attr['options'] );
+			$attr['size'] = isset( $attr['size'] )
+				? $attr['size']
+				: $count >= 1 && $count <= 6 ? $count : 6;
+			$attr['multiple'] = true;
+		}
 
 		$options = $attr;
 		unset( $attr['options'] );
@@ -40,33 +54,15 @@ class Select extends Abstract_View {
 
 	protected function render_options( array $attr ) {
 
-		if ( ! isset( $attr['options'] ) ) {
-			$attr['options'] = [];
-		}
-
 		$html = '';
-		if ( isset( $attr['show_option_none'] ) ) {
-			$none = is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
-			// $attr['options'] = array_merge( array( 'none' => $none ), $attr['options'] );
-//			$html .= '<option value="0"> ' . esc_html( $none ) . '</option>';
-			// $html .= '<option  disabled selected> ' . esc_html( $none ) . '</option>';
-			$attr['options'] = [ $none ] + $attr['options'];
-		}
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
-
-//			if ( in_array( $value, (array) $attr['value'], true ) ) {
-//				$out = ' selected="selected" ';
-//			}
-
-			d( $value, $attr['value'], $this->is_selected( $value, $attr['value'], $attr ) );
 
 			$html .= sprintf(
 				'<option%s>%s</option>',
 				HTML\get_attr( 'option',
 					[
 						'value'		=> $value,
-//						'selected'	=> $attr['value'] === $value ? 'selected' : false,
 						'selected'	=> $this->is_selected( $value, $attr['value'], $attr ),
 					]
 				),
@@ -83,18 +79,10 @@ class Select extends Abstract_View {
 			$this->is_multiple( $attr )
 			&& is_array( $haystack )
 			&& in_array( $needle, $haystack, true )
+			|| is_string( $haystack ) && $needle === $haystack
 		) {
 			return 'selected';
-		} elseif ( is_string( $haystack ) && $needle === $haystack ) {
-			return 'selected';
 		}
-
-//		if (
-//			is_array( $haystack ) && in_array( $needle, $haystack, true )
-//			|| is_string( $haystack ) && $needle === $haystack
-//		) {
-//			return 'selected';
-//		}
 
 		return false;
 	}

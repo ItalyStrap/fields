@@ -10,7 +10,6 @@
 
 namespace ItalyStrap\Fields;
 
-use idlikethis\Shortcodes\SimpleTest;
 use ItalyStrap\HTML;
 use InvalidArgumentException;
 
@@ -48,6 +47,9 @@ class Fields implements Fields_Interface {
 
 		'select'			=> '\ItalyStrap\Fields\View\Select',
 		'multiple_select'   => '\ItalyStrap\Fields\View\Select',
+
+		'taxonomy_select'   => '\ItalyStrap\Fields\View\Taxonomy_Select',
+		'taxonomy_multiple_select'   => '\ItalyStrap\Fields\View\Taxonomy_Select',
 	];
 
     /**
@@ -200,160 +202,6 @@ class Fields implements Fields_Interface {
         //         'RenderableElementInterface::class'
         //     )
         // );
-	}
-
-	/**
-	 * Create the Field Select
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Select
-	 */
-	public function select( array $key, $out = '' ) {
-
-		$out .= $this->label( $key['name'], $key['_id'] );
-
-		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
-
-		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
-
-		$out .= '> ';
-
-		$selected = isset( $key['value'] ) ? $key['value'] : $key['default'];
-
-		if ( ! isset( $key['options'] ) ) {
-			$key['options'] = array();
-		}
-
-		if ( isset( $key['show_option_none'] ) ) {
-			$none = is_string( $key['show_option_none'] ) ? $key['show_option_none'] : __( 'None', 'italystrap' ) ;
-			// $key['options'] = array_merge( array( 'none' => $none ), $key['options'] );
-			$out .= '<option value="0"> ' . esc_html( $none ) . '</option>';
-			// $out .= '<option  disabled selected> ' . esc_html( $none ) . '</option>';
-		}
-
-		foreach ( (array) $key['options'] as $field => $option ) {
-
-			$out .= '<option value="' . esc_attr( $field ) . '" ';
-
-			if ( $selected === $field ) {
-				$out .= ' selected="selected" '; }
-
-			$out .= '> ' . esc_html( $option ) . '</option>';
-
-		}
-
-		$out .= ' </select> ';
-
-		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
-
-		return $out;
-	}
-
-	/**
-	 * Create the Field Multiple Select
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Select
-	 */
-	public function multiple_select( array $key, $out = '' ) {
-
-		$out .= $this->label( $key['name'], $key['_id'] );
-
-		// $out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
-		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '[]" ';
-
-		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
-
-		$out .= 'size="6" multiple> ';
-
-		$default = empty( $key['default'] ) ? array() : array( $key['default'] );
-		$selected = ! empty( $key['value'] ) ? $key['value'] : $default;
-
-		if ( isset( $key['show_option_none'] ) ) {
-			$none = ( is_string( $key['show_option_none'] ) ) ? $key['show_option_none'] : __( 'None', 'italystrap' ) ;
-			// $key['options'] = array_merge( array( 'none' => $none ), $key['options'] );
-			$out .= '<option value="0"> ' . esc_html( $none ) . '</option>';
-			// $out .= '<option  disabled selected> ' . esc_html( $none ) . '</option>';
-		}
-
-		foreach ( (array) $key['options'] as $field => $option ) {
-
-			$out .= '<option value="' . esc_attr( $field ) . '" ';
-
-			if ( in_array( $field, (array) $selected, true ) ) {
-				$out .= ' selected="selected" ';
-			}
-
-			$out .= '> ' . esc_html( $option ) . '</option>';
-
-		}
-
-		$out .= ' </select> ';
-
-		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
-
-		return $out;
-	}
-
-	/**
-	 * Create the Field Multiple Select
-	 *
-	 * @access public
-	 * @param  array  $key The key of field's array to create the HTML field.
-	 * @param  string $out The HTML form output.
-	 * @return string      Return the HTML Field Select
-	 */
-	public function taxonomy_multiple_select( array $key, $out = '' ) {
-
-		$out .= $this->label( $key['name'], $key['_id'] );
-
-		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '[]" ';
-
-		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
-
-		$out .= 'size="6" multiple> ';
-
-		$selected = ! empty( $key['value'] ) ? $key['value'] : array();
-
-		if ( isset( $key['show_option_none'] ) ) {
-			$none = ( is_string( $key['show_option_none'] ) ) ? $key['show_option_none'] : __( 'None', 'italystrap' ) ;
-			$out .= '<option value="0"> ' . esc_html( $none ) . '</option>';
-		}
-
-		$tax_arrays = get_terms( $key['taxonomy'] );
-
-// var_dump( wp_list_categories( array( 'taxonomy' => $key['taxonomy'], 'echo' => false ) ) );
-		foreach ( (array) $tax_arrays as $tax_obj ) {
-
-			if ( ! is_object( $tax_obj ) ) {
-				continue;
-			}
-
-			$out .= '<option value="' . esc_attr( $tax_obj->term_id ) . '" ';
-
-			if ( in_array( $tax_obj->term_id, (array) $selected ) ) {
-				$out .= ' selected="selected" ';
-			}
-
-			$out .= '> ' . esc_html( $tax_obj->name ) . '</option>';
-
-		}
-
-		$out .= ' </select> ';
-
-		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
-
-		return $out;
 	}
 
 	/**

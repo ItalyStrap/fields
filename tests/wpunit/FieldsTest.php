@@ -485,6 +485,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 			'id'		=> $id,
 			'value'		=> $value,
 			'multiple'	=> $multiple, // Se false o null non verrà stampato
+			'show_option_none' => true,
 			'options'	=> [
 				'key0'		=> 'value0',
 				'key1'		=> 'value1',
@@ -503,6 +504,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		if ( isset( $instance_val ) ) {
 			$value = $instance_val;
 		}
+
+		$this->assertContains( 'None</option>', $html );
 
 		/**
 		 * Multiple true

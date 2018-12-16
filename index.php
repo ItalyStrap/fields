@@ -35,18 +35,37 @@ if ( is_admin() ) {
 	return;
 }
 
-echo '<form action="">';
-
 function fields_example() {
+
+	echo '<form action="">';
+//	\wp_create_category( 'New cat' );
+//	wp_insert_category(['cat_name'=> 'Cat Name']);
+
+	d( get_terms( 'category' ) );
+	d( get_terms( [ 'taxonomy' => 'category' ] ) );
+	d( get_terms( 'post_tag' ) );
+	d( get_terms( [ 'taxonomy' => 'post_tag' ] ) );
+
 
 	$fields = new \ItalyStrap\Fields\Fields();
 
 	$attr = array(
-		'type'			=> 'select',
+		'type'			=> 'taxonomy_select',
+		'id'            => 'jnjkgsrk',
+//		'value'         => ['key','key1'],
+		'taxonomy'		=> 'category',
+		'show_option_none' => true,
+	);
+
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
+
+	$attr = array(
+		'type'			=> 'multiple_select',
 		'id'            => 'jnjkk',
 		'value'         => ['key','key1'],
-		'size'          => '6',
-		'multiple'      => true,
+//		'size'          => '6',
+//		'multiple'      => true,
 		'show_option_none' => true,
 		'options'		=> [
 		        'key'   => 'value',
@@ -56,8 +75,8 @@ function fields_example() {
         ],
 	);
 
-	print $fields->render( $attr );
-	d( $fields->render( $attr ) );
+//	print $fields->render( $attr );
+//	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'select',
@@ -75,9 +94,9 @@ function fields_example() {
 	);
 
 	$instance['sel11'] = ['key1', 'key3'];
-
-	print $fields->render( $attr, $instance );
-	d( $fields->render( $attr, $instance ) );
+//
+//	print $fields->render( $attr, $instance );
+//	d( $fields->render( $attr, $instance ) );
 
 	$attr = array(
 		'type'			=> 'select',
@@ -95,8 +114,8 @@ function fields_example() {
 
 	$instance['sel'] = ['key1', 'key3'];
 
-	print $fields->render( $attr, $instance );
-	d( $fields->render( $attr, $instance ) );
+//	print $fields->render( $attr, $instance );
+//	d( $fields->render( $attr, $instance ) );
 
 	$attr = array(
 		'type'			=> 'select',
@@ -112,8 +131,8 @@ function fields_example() {
 
 	$instance['select'] = 'key2';
 
-	print $fields->render( $attr, $instance );
-	d( $fields->render( $attr, $instance ) );
+//	print $fields->render( $attr, $instance );
+//	d( $fields->render( $attr, $instance ) );
 
 //	$attr = array(
 //		'type'			=> 'editor',
