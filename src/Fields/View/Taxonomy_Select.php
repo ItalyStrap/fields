@@ -14,7 +14,7 @@ class Taxonomy_Select extends Select {
 	protected function render_options( array $attr ) {
 
 		if ( ! isset( $attr['taxonomy'] ) ) {
-			return '';
+			$attr['taxonomy'] = 'category';
 		}
 
 		$tax_arrays = get_terms( $attr['taxonomy'] );

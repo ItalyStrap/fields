@@ -537,6 +537,55 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		}
 	}
 
+	/**
+	 * @test
+	 */
+	public function it_should_be_taxonomy_selected()
+	{
+		$terms = $this->factory()->term->create_many( 5, [ 'taxonomy' => 'category' ] );
+		$posts = $this->factory()->post->create_many( 5 );
+
+		foreach ( $posts as $key => $post )  {
+			wp_set_object_terms( $post, $terms, 'category' );
+		}
+
+//		codecept_debug(get_terms('category'));
+
+		$instance_val = 2;
+
+		$id = uniqid();
+		$sut = $this->make_instance();
+		$attr = [
+			'type'		=> 'taxonomy_select',
+			'id'		=> $id,
+//			'value'		=> $value,
+//			'value'		=> '1',
+//			'multiple'	=> $multiple, // Se false o null non verrà stampato
+			'multiple'	=> true, // Se false o null non verrà stampato
+//			'taxonomy'	=> 'category',
+//			'show_option_none' => true,
+//			'options'	=> [
+//				'key0'		=> 'value0',
+//				'key1'		=> 'value1',
+//				'key2'		=> 'value2',
+//				'key3'		=> 'value3',
+//			],
+		];
+		$instance[ $id ] = $instance_val;
+		$html = $sut->render( $attr, $instance );
+
+//		codecept_debug( $html );
+
+		$this->assertContains( 'selected="selected"', $html );
+
+		$instance[ $id ] = [4,5];
+		$html = $sut->render( $attr, $instance );
+
+//		codecept_debug( $html );
+
+		$this->assertContains( 'selected="selected"', $html );
+	}
+
     /**
      * Get fields_type output
      */

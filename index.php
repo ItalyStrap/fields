@@ -41,10 +41,10 @@ function fields_example() {
 //	\wp_create_category( 'New cat' );
 //	wp_insert_category(['cat_name'=> 'Cat Name']);
 
-	d( get_terms( 'category' ) );
-	d( get_terms( [ 'taxonomy' => 'category' ] ) );
-	d( get_terms( 'post_tag' ) );
-	d( get_terms( [ 'taxonomy' => 'post_tag' ] ) );
+//	d( get_terms( 'category' ) );
+//	d( get_terms( [ 'taxonomy' => 'category' ] ) );
+//	d( get_terms( 'post_tag' ) );
+//	d( get_terms( [ 'taxonomy' => 'post_tag' ] ) );
 
 
 	$fields = new \ItalyStrap\Fields\Fields();
@@ -52,7 +52,7 @@ function fields_example() {
 	$attr = array(
 		'type'			=> 'taxonomy_select',
 		'id'            => 'jnjkgsrk',
-//		'value'         => ['key','key1'],
+		'value'         => 1,
 		'taxonomy'		=> 'category',
 		'show_option_none' => true,
 	);
@@ -75,8 +75,8 @@ function fields_example() {
         ],
 	);
 
-//	print $fields->render( $attr );
-//	d( $fields->render( $attr ) );
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'select',

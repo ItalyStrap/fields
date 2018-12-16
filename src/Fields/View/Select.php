@@ -22,6 +22,8 @@ class Select extends Abstract_View {
 			$attr['options'] = [];
 		}
 
+		$attr['type'] = 'select';
+
 		if ( isset( $attr['show_option_none'] ) ) {
 			$none = is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
 			// $attr['options'] = array_merge( array( 'none' => $none ), $attr['options'] );
@@ -73,13 +75,32 @@ class Select extends Abstract_View {
 		return $html;
 	}
 
-	protected function is_selected( $needle, $haystack, $attr ) {
+	/**
+	 * @param $needle
+	 * @param $haystack
+	 * @param $attr
+	 * @return bool|string
+	 */
+	/**
+	 * @param int|string       $needle
+	 * @param int|string|array $haystack
+	 * @param array            $attr
+	 *
+	 * @return bool|string
+	 */
+	protected function is_selected( $needle, $haystack, array $attr ) {
+//		codecept_debug( $needle );
+//		codecept_debug( $haystack );
+
+//		d( $needle, $haystack );
 
 		if (
-			$this->is_multiple( $attr )
-			&& is_array( $haystack )
+//			$this->is_multiple( $attr )
+//			&&
+			is_array( $haystack )
 			&& in_array( $needle, $haystack, true )
-			|| is_string( $haystack ) && $needle === $haystack
+//			|| is_string( $haystack ) && $needle == $haystack // Problema con gli int
+			|| $needle == $haystack // Problema con gli int
 		) {
 			return 'selected';
 		}
