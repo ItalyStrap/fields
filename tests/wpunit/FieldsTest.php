@@ -531,7 +531,6 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 			if ( empty( $value ) ) {
 				$this->assertNotContains( '" selected="selected">', $html );
 			} else {
-//				$this->assertIsString( $value );
 				$this->assertContains( '<option value="' . $value . '" selected="selected">', $html );
 			}
 		}
@@ -542,16 +541,19 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_taxonomy_selected()
 	{
-		$terms = $this->factory()->term->create_many( 5, [ 'taxonomy' => 'category' ] );
+		$taxonomy = 'category';
+		$terms_qta = rand( 10, 20 );
+		$terms = $this->factory()->term->create_many( $terms_qta, [ 'taxonomy' => $taxonomy ] );
 		$posts = $this->factory()->post->create_many( 5 );
 
 		foreach ( $posts as $key => $post )  {
-			wp_set_object_terms( $post, $terms, 'category' );
+			wp_set_object_terms( $post, $terms, $taxonomy );
 		}
 
-//		codecept_debug(get_terms('category'));
+		$min = min( $terms );
+		$max = max( $terms );
 
-		$instance_val = 2;
+		$instance_val = rand( $min, $max );
 
 		$id = uniqid();
 		$sut = $this->make_instance();
@@ -562,28 +564,30 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 //			'value'		=> '1',
 //			'multiple'	=> $multiple, // Se false o null non verrà stampato
 			'multiple'	=> true, // Se false o null non verrà stampato
-//			'taxonomy'	=> 'category',
+//			'taxonomy'	=> $taxonomy,
 //			'show_option_none' => true,
-//			'options'	=> [
-//				'key0'		=> 'value0',
-//				'key1'		=> 'value1',
-//				'key2'		=> 'value2',
-//				'key3'		=> 'value3',
-//			],
 		];
 		$instance[ $id ] = $instance_val;
 		$html = $sut->render( $attr, $instance );
 
-//		codecept_debug( $html );
+		/**
+		 * Multiple deve essere presente
+		 */
+		$this->assertContains( 'multiple', $html );
+		$this->assertContains( 'value="' . $instance_val . '" selected="selected"', $html );
 
-		$this->assertContains( 'selected="selected"', $html );
 
-		$instance[ $id ] = [4,5];
+		/**
+		 * Qui randomizzo i valori che dovranno essere select
+		 * in base ai terms creati
+		 */
+		$instance_val = array_rand( array_flip( $terms ), rand( $min, count( $terms ) ) );
+		$instance[ $id ] = $instance_val;
 		$html = $sut->render( $attr, $instance );
 
-//		codecept_debug( $html );
-
-		$this->assertContains( 'selected="selected"', $html );
+		foreach ( $instance[ $id ] as $k => $v ) {
+			$this->assertContains( 'value="' . $v . '" selected="selected"', $html );
+		}
 	}
 
     /**
