@@ -563,7 +563,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 //			'value'		=> $value,
 //			'value'		=> '1',
 //			'multiple'	=> $multiple, // Se false o null non verrà stampato
-			'multiple'	=> true, // Se false o null non verrà stampato
+//			'multiple'	=> true, // Se false o null non verrà stampato
 //			'taxonomy'	=> $taxonomy,
 //			'show_option_none' => true,
 		];
@@ -573,6 +573,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		/**
 		 * Multiple deve essere presente
 		 */
+		$this->assertContains( 'type="select"', $html );
 		$this->assertContains( 'multiple', $html );
 		$this->assertContains( 'value="' . $instance_val . '" selected="selected"', $html );
 
