@@ -42,6 +42,8 @@ class Fields implements Fields_Interface {
 
 		'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
 
+		'radio'			    => '\ItalyStrap\Fields\View\Radio',
+
 		'editor'			=> '\ItalyStrap\Fields\View\Editor',
 		'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
 

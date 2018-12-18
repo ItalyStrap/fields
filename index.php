@@ -37,6 +37,21 @@ if ( is_admin() ) {
 
 function fields_example() {
 
+//	d( _wp_add_global_attributes( [] ) );
+//
+//	$array_ = [
+//		'id' => rand(),
+//	];
+//	$allowed = [
+//		'id',
+//		'class',
+//	];
+//
+//	d( $array_ );
+//	d( $allowed );
+//	d( array_flip( $allowed ) );
+//	d( array_intersect_key( array_flip( $allowed ), $array_  ) );
+
 	echo '<form action="">';
 //	\wp_create_category( 'New cat' );
 //	wp_insert_category(['cat_name'=> 'Cat Name']);
@@ -48,6 +63,21 @@ function fields_example() {
 
 
 	$fields = new \ItalyStrap\Fields\Fields();
+
+	$attr = array(
+		'type'			=> 'radio',
+		'id'            => 'dtbr',
+		'value'			=> 'key1',
+		'options'		=> [
+			'key'   => 'value',
+			'key1'   => 'value1',
+			'key2'   => 'value2',
+			'key3'   => 'value3',
+		],
+	);
+
+	print $fields->render( $attr );
+	d( $fields->render( $attr ) );
 
 	$attr = array(
 		'type'			=> 'taxonomy_select',

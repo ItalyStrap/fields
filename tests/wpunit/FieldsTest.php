@@ -406,12 +406,85 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 * @dataProvider  checkbox_val_provider
 	 */
 	public function it_should_be_checkbox_checked( $default, $value, $instance_val ) {
-		$needle = 'checked="checked"';
+		$needle = 'checked';
 
 		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
 			$this->assertNotContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
 		} else {
 			$this->assertContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function radio_val_provider() {
+		/**
+		 * default|value|instance
+		 */
+		return [
+			/**
+			 * Settato solo il valore di default
+			 * la radio è spuntata
+			 */
+			[ 'key', null, null ],
+			/**
+			 * Settato solo il valore di value
+			 * la radio è spuntata
+			 */
+			[ null, 'key', null ],
+			/**
+			 * Settato solo instance
+			 * la radio è spuntata
+			 */
+			[ null, null, 'key' ],
+			/**
+			 * Se nulla è settato e la instance ritorna null o ""
+			 * NON mostro la spunta
+			 */
+			[ null, null, '' ],
+			[ null, null, null ],
+			/**
+			 * Se sono settati default e/o value ma la instance
+			 * è "" non c'è la spunta.
+			 */
+			[ 'key', null, '' ],
+			[ null, 'key', '' ],
+			[ 'key2', 'key2', '' ],
+			[ 'key2', 'key2', 'key1' ],
+		];
+	}
+
+	private function get_radio( $default, $value, $instance_val ) {
+		$sut = $this->make_instance();
+		$attr[ 'type' ] = 'radio';
+
+		$id = 'radio_ID';
+		$attr['id'] = $id;
+		$attr['default'] = $default;
+		$attr['value'] = $value;
+		$attr['options'] = [
+			'key'   => 'value',
+			'key1'   => 'value1',
+			'key2'   => 'value2',
+			'key3'   => 'value3',
+		];
+		$instance[ $id ] = $instance_val;
+		return $sut->render( $attr, $instance );
+	}
+
+	/**
+	 * @test
+	 * it_should_be_checkbox_checked
+	 * @dataProvider  radio_val_provider
+	 */
+	public function it_should_be_radio_checked( $default, $value, $instance_val ) {
+		$needle = 'checked';
+
+		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
+			$this->assertNotContains( $needle, $this->get_radio( $default, $value, $instance_val ) );
+		} else {
+			$this->assertContains( $needle, $this->get_radio( $default, $value, $instance_val ) );
 		}
 	}
 

@@ -19,7 +19,8 @@ class Checkbox extends Abstract_View {
 	protected function maybe_render( array $attr ) {
 
 		if ( ! empty( $attr['value'] ) ) {
-			$attr['checked'] = 'checked';
+//			$attr['checked'] = 'checked';
+			$attr['checked'] = true;
 		}
 
 		return sprintf(
