@@ -19,7 +19,7 @@ class Radio extends Abstract_View {
 	protected function maybe_render( array $attr ) {
 
 		if ( ! isset( $attr['options'] ) ) {
-			$attr['options'] = [];
+			$attr['options'] = [ __( 'No options available', 'italystrap' ) ];
 		}
 
 //		d( $this->render_options( $attr ) );

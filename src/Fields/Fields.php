@@ -18,41 +18,12 @@ use InvalidArgumentException;
  */
 class Fields implements Fields_Interface {
 
-	private $types = [
-        'button'			=> '\ItalyStrap\Fields\View\Input',
-        'color'				=> '\ItalyStrap\Fields\View\Input',
-        'date'				=> '\ItalyStrap\Fields\View\Input',
-        'datetime'			=> '\ItalyStrap\Fields\View\Input',
-        'datetime-local'	=> '\ItalyStrap\Fields\View\Input',
-        'email'				=> '\ItalyStrap\Fields\View\Input',
-        'file'				=> '\ItalyStrap\Fields\View\Input',
-        'hidden'			=> '\ItalyStrap\Fields\View\Input',
-        'image'				=> '\ItalyStrap\Fields\View\Input',
-        'month'				=> '\ItalyStrap\Fields\View\Input',
-        'number'			=> '\ItalyStrap\Fields\View\Input',
-        'password'			=> '\ItalyStrap\Fields\View\Input',
-        'range'				=> '\ItalyStrap\Fields\View\Input',
-        'search'			=> '\ItalyStrap\Fields\View\Input',
-        'submit'			=> '\ItalyStrap\Fields\View\Input',
-        'tel'				=> '\ItalyStrap\Fields\View\Input',
-        'text'				=> '\ItalyStrap\Fields\View\Input',
-        'time'				=> '\ItalyStrap\Fields\View\Input',
-        'url'				=> '\ItalyStrap\Fields\View\Input',
-        'week'				=> '\ItalyStrap\Fields\View\Input',
+	private $types = [];
 
-		'checkbox'			=> '\ItalyStrap\Fields\View\Checkbox',
-
-		'radio'			    => '\ItalyStrap\Fields\View\Radio',
-
-		'editor'			=> '\ItalyStrap\Fields\View\Editor',
-		'textarea'			=> '\ItalyStrap\Fields\View\Textarea',
-
-		'select'			=> '\ItalyStrap\Fields\View\Select',
-		'multiple_select'   => '\ItalyStrap\Fields\View\Select',
-
-		'taxonomy_select'   => '\ItalyStrap\Fields\View\Taxonomy_Select',
-		'taxonomy_multiple_select'   => '\ItalyStrap\Fields\View\Taxonomy_Select',
-	];
+	public function __construct()
+	{
+        $this->types = require( __DIR__ . '/../../config/types.php' );
+	}
 
     /**
      * Get all types
@@ -99,7 +70,6 @@ class Fields implements Fields_Interface {
 	 * @return string           Return the html field
 	 */
 	public function render( array $attr, array $instance = [] ) {
-
 		/**
 		 * If field is requesting to be conditionally shown
 		 */
@@ -107,12 +77,21 @@ class Fields implements Fields_Interface {
 			return '';
 		}
 
-		if ( isset( $attr['class-p'] ) ) {
-		    _deprecated_argument(
-		            __FUNCTION__,
-                    '1.0',
-                    'This attributes is deprecated on . Use wrapper attributes instead'
-            );
+		$deprecated = [
+			'class-p',
+        ];
+
+		foreach ( $deprecated as $val ) {
+			if ( isset( $attr[ $val ] ) ) {
+				_deprecated_argument(
+					__FUNCTION__,
+					'1.0',
+					sprintf(
+						'"$s" attribute is deprecated.',
+                        $val
+                    )
+				);
+			}
         }
 
 		/**
