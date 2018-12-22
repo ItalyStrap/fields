@@ -17,6 +17,7 @@
         "italystrap/debug": "~1.1"
     },
     "autoload": {
+        "files": ["src/bootstrap.php"],
         "psr-4": {
             "ItalyStrap\\Fields\\": "src/Fields/"
         }

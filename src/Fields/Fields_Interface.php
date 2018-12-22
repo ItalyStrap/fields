@@ -21,7 +21,7 @@ interface Fields_Interface {
 	 * @param  array $instance This is the $instance variable of widget
 	 *                         or the options variable of the plugin.
 	 *
-	 * @return string           Return the html field
+	 * @return string          Return the html field
 	 */
 	public function render( array $attr, array $instance = [] );
 }

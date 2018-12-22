@@ -1,8 +1,10 @@
 <?php
 
-if ( is_admin() ) {
-	return;
-}
+//if ( is_admin() ) {
+//	return;
+//}
+
+//wp_enqueue_media();
 
 function fields_example() {
 
@@ -21,7 +23,9 @@ function fields_example() {
 //	d( array_flip( $allowed ) );
 //	d( array_intersect_key( array_flip( $allowed ), $array_  ) );
 
-	echo '<form action="" style="margin-bottom: 5rem;margin-left: 2rem;">';
+//	_wp_add_global_attributes( $value )
+
+	echo '<form action="" style="padding-bottom: 5rem;margin-left: 20rem;">';
 
 	$fields = new \ItalyStrap\Fields\Fields();
 
@@ -258,8 +262,18 @@ function fields_example() {
 
 	echo $fields->render( $attr );
 
+	$attr = array(
+		'type'			=> 'media',
+		'label'			=> 'Media',
+		'id'            => 'mediaID',
+//		'value'         => 1,
+		'show_option_none' => true,
+	);
+
+	echo $fields->render( $attr );
 
 	echo '</form>';
 }
 
 add_action( 'wp_footer', 'fields_example' );
+add_action( 'admin_footer', 'fields_example' );

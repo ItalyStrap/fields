@@ -115,14 +115,6 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
     /**
      * @test
-     * it_should_be_field_array_settings_set
-     */
-    public function it_should_be_field_array_settings_set() {
-        $this->assertTrue( isset( $this->fields_array ) );
-    }
-
-    /**
-     * @test
      * it should be instantiatable
      */
     public function it_should_be_instantiatable()
@@ -166,7 +158,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * @test
-	 * it_should_be_hidden
+	 * it_should_be_type_text_by_default
 	 */
 	public function it_should_be_type_text_by_default() {
 
@@ -175,6 +167,47 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 //        $this->assertContains( 'type="text"', $html );
 		$this->assertContains( '<input', $html );
+	}
+
+	/**
+	 * @test
+	 * it_should_be_id_name_correct
+	 */
+	public function it_should_be_id_name_correct() {
+
+		$sut = $this->make_instance();
+
+		/**
+		 * In ItalyStrap\Settings API
+		 */
+		$expected = 'italystrap_settings[show-ids]';
+		$attr = [
+			'type'	=> 'text',
+			'_id'	=> $expected
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'id="' . $expected . '"', $html );
+		$this->assertContains( 'name="' . $expected . '"', $html );
+		$this->assertNotContains( '_id="' . $expected . '"', $html );
+		$this->assertNotContains( '_name="' . $expected . '"', $html );
+
+		/**
+		 * In ItalyStrap\Widget
+		 */
+		$expected_id = 'widget-italystrap-posts-6-add_permalink_wrapper';
+		$expected_name = 'widget-italystrap-posts[6][add_permalink_wrapper]';
+		$attr = [
+			'type'	=> 'text',
+			'_id'	=> $expected_id,
+			'_name'	=> $expected_name,
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'id="' . $expected_id . '"', $html );
+		$this->assertContains( 'name="' . $expected_name . '"', $html );
+		$this->assertNotContains( '_id="' . $expected_id . '"', $html );
+		$this->assertNotContains( '_name="' . $expected_name . '"', $html );
 	}
 
 	/**
@@ -190,6 +223,23 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$html = $sut->render( $attr );
 
 		$this->assertContains( 'type="checkbox"', $html );
+	}
+
+	/**
+	 * @test
+	 * it_should_have_id_and_name_with_same_value
+	 */
+	public function it_should_have_id_and_name_with_same_value() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'text',
+			'id'	=> 'foo',
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( 'id="foo"', $html );
+		$this->assertContains( 'name="foo"', $html );
 	}
 
 	/**

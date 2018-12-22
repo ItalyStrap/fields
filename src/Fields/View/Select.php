@@ -98,4 +98,58 @@ class Select extends Abstract_View {
 	protected function is_multiple(array $attr) {
 		return isset( $attr['multiple'] ) || isset( $attr['attributes']['multiple'] );
 	}
+
+	/**
+	 * Create the Field Select with Options Group
+	 *
+	 * @access public
+	 * @param  array $key The key of field's array to create the HTML field.
+	 * @param  string $out The HTML form output.
+	 * @return string      Return the HTML Field Select with Options Group
+	 */
+	private function select_group(array $key, $out = '' ) {
+
+		$out .= $this->label( $key['name'], $key['_id'] );
+
+		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
+
+		if ( isset( $key['class'] ) ) {
+			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
+
+		$out .= '> ';
+
+		$selected = isset( $key['value'] ) ? $key['value'] : $key['default'];
+
+		if ( isset( $key['show_option_none'] ) ) {
+			$none = ( is_string( $key['show_option_none'] ) ) ? $key['show_option_none'] : __( 'None', 'italystrap' ) ;
+			// $key['options'] = array_merge( array( 'none' => $none ),$key['options'] );
+			$out .= '<option value="0"> ' . esc_html( $none ) . '</option>';
+			// $out .= '<option  disabled selected> ' . esc_html( $none ) . '</option>';
+		}
+
+		foreach ( (array) $key['options'] as $group => $options ) {
+
+			$out .= '<optgroup label="' . $group . '">';
+
+			foreach ( $options as $field => $option ) {
+
+				$out .= '<option value="' . esc_attr( $field ) . '" ';
+
+				if ( esc_attr( $selected ) === $field ) {
+					$out .= ' selected="selected" '; }
+
+				$out .= '> ' . esc_html( $option ) . '</option>';
+			}
+
+			$out .= '</optgroup>';
+
+		}
+
+		$out .= '</select>';
+
+		if ( isset( $key['desc'] ) ) {
+			$out .= $this->description( $key['desc'] ); }
+
+		return $out;
+	}
 }
