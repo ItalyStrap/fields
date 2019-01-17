@@ -320,7 +320,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		return [
 			[ '__return_false' ],
 			[ false ],
-			['false'],
+//			['false'],
 			[ 0 ],
 			[ '0' ],
 			[ '' ],
@@ -435,10 +435,15 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 			[ '1', null, '' ],
 			[ null, '1', '' ],
 			[ '1', '1', '' ],
+			/**
+			 * Testo un eventuale multicheck
+			 */
+			[ null, 'key1', null, [ 'key1' => 'Value1', 'key2' => 'Value2' ] ],
+			[ [ 'key1', 'key2' ], null, null, [ 'key1' => 'Value1', 'key2' => 'Value2' ] ],
 		];
 	}
 
-	private function get_checkbox( $default, $value, $instance_val ) {
+	private function get_checkbox( $default, $value, $instance_val, $options = null ) {
 		$sut = $this->make_instance();
 		$attr[ 'type' ] = 'checkbox';
 
@@ -446,6 +451,9 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$attr['id'] = $id;
 		$attr['default'] = $default;
 		$attr['value'] = $value;
+		if ( $options ) {
+			$attr['options'] = (array) $options;
+		}
 		$instance[ $id ] = $instance_val;
 		return $sut->render( $attr, $instance );
 	}
@@ -455,13 +463,13 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 * it_should_be_checkbox_checked
 	 * @dataProvider  checkbox_val_provider
 	 */
-	public function it_should_be_checkbox_checked( $default, $value, $instance_val ) {
+	public function it_should_be_checkbox_checked( $default, $value, $instance_val, $options = null ) {
 		$needle = 'checked';
 
 		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
-			$this->assertNotContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
+			$this->assertNotContains( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
 		} else {
-			$this->assertContains( $needle, $this->get_checkbox( $default, $value, $instance_val ) );
+			$this->assertContains( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
 		}
 	}
 

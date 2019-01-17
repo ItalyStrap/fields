@@ -293,6 +293,10 @@ class Fields implements Fields_Interface {
 			return $show;
 		}
 
+//		if ( 'false' === $attr[ 'show_on_cb' ] ) {
+//			$attr[ 'show_on_cb' ] = false;
+//		}
+
 		/**
 		 * Use the callback to determine showing the field, if it exists
 		 */
@@ -300,10 +304,12 @@ class Fields implements Fields_Interface {
 			return (bool) call_user_func( $attr[ 'show_on_cb' ], $this );
 		}
 
-		if ( 'false' === $attr[ 'show_on_cb' ] ) {
-			return false;
-		}
-
+		/**
+		 * Example:
+		 * 'load_on'		=> false,
+		 * 'load_on'		=> true,
+		 * 'load_on'		=> is_my_function\return_bool(),
+		 */
 		return (bool) $attr[ 'show_on_cb' ];
 	}
 }

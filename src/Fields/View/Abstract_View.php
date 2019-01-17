@@ -28,8 +28,13 @@ class Abstract_View implements Renderable_Element_Interface {
 
     public function with( $key, $value )
     {
-        $this->elements[ $key ] = $value;
+        $this->set( $key, $value );
         return $this;
+    }
+
+	protected function set( $key, $value )
+    {
+        $this->elements[ $key ] = $value;
     }
 
     /**

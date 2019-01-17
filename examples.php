@@ -139,6 +139,43 @@ function fields_example() {
 
     echo $fields->render( $attr );
 
+	/**
+	 * Multicheckbox
+	 */
+	$attr = [
+		'type'  => 'checkbox',
+		'label' => 'Checkbox checked by default',
+		'id'    => 'checkbox_with_options',
+		'value' => 'key1',
+		'options'		=> [
+			'key'   => 'value',
+			'key1'   => 'value1',
+			'key2'   => 'value2',
+			'key3'   => 'value3',
+		],
+	];
+
+    echo $fields->render( $attr );
+
+    echo 'Multicheck width multivalue';
+	/**
+	 * Multicheckbox with multivalue
+	 */
+	$attr = [
+		'type'  => 'checkbox',
+		'label' => 'Checkbox checked by default',
+		'id'    => 'checkbox_with_options',
+		'value' => ['key1', 'key3'],
+		'options'		=> [
+			'key'   => 'value',
+			'key1'   => 'value1',
+			'key2'   => 'value2',
+			'key3'   => 'value3',
+		],
+	];
+
+    echo $fields->render( $attr );
+
 
 	$attr = array(
 		'type'			=> 'radio',
