@@ -61,7 +61,7 @@ class Radio extends Abstract_View {
 			unset( $new_attr['options'] );
 
 			$html .= sprintf(
-				'<div><input%s/>%s</div>',
+				'<p><input%s/>%s</p>',
 				HTML\get_attr( 'input', $new_attr ),
 				$this->label()
 			);
