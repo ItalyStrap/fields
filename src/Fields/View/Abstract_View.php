@@ -71,6 +71,15 @@ class Abstract_View implements Renderable_Element_Interface {
     }
 
     /**
+     * Create the field legend
+     *
+     * @return string       Return the description
+     */
+    protected function legend(){
+        return $this->render_tag( 'legend', ['class' => 'legend'] );
+    }
+
+    /**
      * Render the HTML tag for label or description.
      *
      * @param string $tag          The name of the element to render (label|desc).
@@ -106,8 +115,9 @@ class Abstract_View implements Renderable_Element_Interface {
         }
 
         $format = [
-            'label' => '<label%s>%s</label>',
-            'desc'  => '<p%s>%s</p>',
+            'label'		=> '<label%s>%s</label>',
+            'legend'	=> '<legend%s>%s</legend>',
+            'desc'		=> '<p%s>%s</p>',
         ];
 
         return sprintf(

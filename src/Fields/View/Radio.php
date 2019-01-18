@@ -18,24 +18,14 @@ class Radio extends Abstract_View {
 	 */
 	protected function maybe_render( array $attr ) {
 
-		if ( ! isset( $attr['options'] ) ) {
-			$attr['options'] = [ __( 'No options available', 'italystrap' ) ];
+		if ( isset( $attr['legend'] ) ) {
+			$this->set( 'legend', $attr['legend'] );
+			unset( $attr['legend'] );
 		}
 
-//		d( $this->render_options( $attr ) );
-
-//		unset( $attr['options'] );
-
-//		return sprintf(
-//			'<input%s/>%s%s',
-//			HTML\get_attr( 'input', $attr ),
-//			$this->label(),
-//			$this->description()
-//		);
-
 		return sprintf(
-			'%s%s%s',
-			$this->label(),
+			'<fieldset>%s%s%s</fieldset>',
+			$this->legend(),
 			$this->render_options( $attr ),
 			$this->description()
 		);
@@ -43,28 +33,37 @@ class Radio extends Abstract_View {
 
 	protected function render_options( array $attr ) {
 
+		if ( ! isset( $attr['options'] ) ) {
+			$attr['options'] = [];
+		}
+
+		if ( isset( $attr['show_option_none'] ) ) {
+			$none = is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
+			$attr['options'] = [ $none ] + $attr['options'];
+		}
+
 		$html = '';
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
 
-			$label = sprintf(
-				'<label for="%s">%s</label>',
-				$attr['id'] . '_' . $value,
-				esc_html( $option )
+			$new_attr = array_merge(
+				$attr,
+				[
+					'id'		=> $attr['id'] . '_' . $value,
+					'value'		=> $value,
+					'checked'	=> $this->is_checked( $value, $attr['value'], $attr ),
+				]
 			);
 
+			$this->set( 'label', $option );
+			$this->set( 'id', $new_attr['id'] );
+
+			unset( $new_attr['options'] );
+
 			$html .= sprintf(
-				'<div><input%s>%s</div>',
-				HTML\get_attr( 'option',
-					[
-						'type'		=> $attr['type'],
-						'id'		=> $attr['id'] . '_' . $value,
-						'name'		=> $option,
-						'value'		=> $value,
-						'checked'	=> $this->is_checked( $value, $attr['value'], $attr ),
-					]
-				),
-				$label
+				'<div><input%s/>%s</div>',
+				HTML\get_attr( 'input', $new_attr ),
+				$this->label()
 			);
 		}
 

@@ -180,7 +180,7 @@ function fields_example() {
 	$attr = array(
 		'type'			=> 'radio',
 		'id'            => 'radio',
-		'label'			=> 'Radio with no options',
+		'legend'		=> 'Radio with no options',
 		// "No options available" will be displayed
 	);
 
@@ -188,8 +188,28 @@ function fields_example() {
 
 	$attr = array(
 		'type'			=> 'radio',
-		'label'			=> 'Radio with options',
-		'id'            => 'radio',
+		'legend'		=> 'Radio with options',
+		'id'            => 'radio1',
+		'value'			=> 'key2', // checked by default
+		'options'		=> [
+			'key'   => 'value',
+			'key1'   => 'value1',
+			'key2'   => 'value2',
+			'key3'   => 'value3',
+		],
+	);
+
+	echo $fields->render( $attr );
+
+	$attr = array(
+		'type'			=> 'radio',
+		'legend'		=> [
+			'content'	=> 'Radio with legend hidden',
+			'attributes'	=> [
+				'class'	=> 'screen-reader-text',
+			],
+		],
+		'id'            => 'radio2',
 		'value'			=> 'key2', // checked by default
 		'options'		=> [
 			'key'   => 'value',
