@@ -209,6 +209,7 @@ function fields_example() {
 				'class'	=> 'screen-reader-text',
 			],
 		],
+		'show_option_none'	=> true,
 		'id'            => 'radio2',
 		'value'			=> 'key2', // checked by default
 		'options'		=> [
