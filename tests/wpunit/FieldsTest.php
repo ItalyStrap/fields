@@ -160,6 +160,54 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * @test
+	 * it_should_be_type_checkbox
+	 */
+	public function it_should_have_element_container() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'text',
+			'label' => 'With Span Container element',
+			'container'	=> [
+				'tag'	=> 'span',
+				'attr'	=> [
+					'id'	=> 'some_id',
+					'class'	=> 'some class',
+				],
+			],
+		];
+		$html = $sut->render( $attr );
+
+		$this->assertContains( '<span', $html );
+		$this->assertContains( 'id="some_id"', $html );
+		$this->assertContains( 'class="some class"', $html );
+	}
+
+	/**
+	 * @test
+	 * it_should_be_type_checkbox
+	 */
+	public function it_should_not_have_element_container() {
+
+		$sut = $this->make_instance();
+		$attr = [
+			'type'	=> 'text',
+			'id'	=> 'no_container',
+			'container'	=> [
+				'tag'	=> null,
+			],
+		];
+		$expected = '<input type="text" id="no_container" name="no_container"/>';
+		$html = $sut->render( $attr );
+
+
+
+		$this->assertNotContains( 'div', $html );
+		$this->assertContains( $expected, $html );
+	}
+
+	/**
+	 * @test
 	 * it_should_be_type_text_by_default
 	 */
 	public function it_should_be_type_text_by_default() {
