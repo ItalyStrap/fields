@@ -29,6 +29,30 @@ function fields_example() {
 
 	$fields = new \ItalyStrap\Fields\Fields();
 
+	$without_container = [
+		'type'	=> 'text',
+        'label' => 'Without Container element',
+		'container'	=> [
+			'tag'	=> null,
+		],
+    ];
+
+    echo $fields->render( $without_container );
+
+	$with_container = [
+		'type'	=> 'text',
+        'label' => 'With Span Container element',
+		'container'	=> [
+			'tag'	=> 'span',
+			'attr'	=> [
+				'id'	=> 'some_id',
+				'class'	=> 'some class',
+			],
+		],
+    ];
+
+    echo $fields->render( $with_container );
+
 	$with_label = [
 		'type'	=> 'text',
         'label' => 'With Label Title',

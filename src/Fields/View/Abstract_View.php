@@ -9,7 +9,7 @@ class Abstract_View implements Renderable_Element_Interface {
     protected $elements = [];
 
 	/**
-	 * @param ElementInterface $attr
+	 * @param array $attr
 	 *
 	 * @return string
 	 */

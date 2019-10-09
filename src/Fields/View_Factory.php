@@ -8,8 +8,58 @@
 
 namespace ItalyStrap\Fields;
 
+use ItalyStrap\Fields\View\Renderable_Element_Interface;
 
-class View_Factory
-{
+class View_Factory {
 
+	private $types;
+
+	/**
+	 * View_Factory constructor.
+	 */
+	public function __construct() {
+		$this->types = require( __DIR__ . '/../../config/types.php' );
+	}
+
+	/**
+	 * Render View
+	 *
+	 * @param string $type
+	 * @return Renderable_Element_Interface
+	 */
+	public function make( $type = 'text' ): Renderable_Element_Interface {
+
+		$search = \strtolower( $type );
+
+		if ( isset( $this->types[ $search ] ) ) {
+
+			return new $this->types[ $search ];
+
+		} elseif ( \class_exists( $type ) ) {
+
+			$class = new $type();
+			// if ( $class instanceof Renderable_Element_Interface ) {
+			return $class;
+			// }
+		}
+
+		return new $this->types['text'];
+
+		// throw new \Exception\UnknownTypeException(
+		//     sprintf(
+		//         'The given type "%s" is not an instance of "%s".',
+		//         $type,
+		//         'RenderableElementInterface::class'
+		//     )
+		// );
+	}
+
+	/**
+	 * Get all types
+	 *
+	 * @return array Return all fields type
+	 */
+	public function getTypes(): array {
+		return (array) $this->types;
+	}
 }

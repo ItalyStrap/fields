@@ -5,7 +5,10 @@
  * This is similar to mine but only for PHP 7 >=
  * https://github.com/Chrico/wp-fields
  *
- * @version 1.0.0
+ * Accessible form:
+ * https://webaim.org/techniques/forms/controls
+ *
+ * @version 2.0.0
  * @package ItalyStrap
  */
 
@@ -18,45 +21,7 @@ use ItalyStrap\HTML;
  */
 class Fields implements Fields_Interface {
 
-	private $types = [];
-
-	public function __construct()
-	{
-		$this->types = require( __DIR__ . '/../../config/types.php' );
-	}
-
-	/**
-	 * Get all types
-	 *
-	 * @return array [description]
-	 */
-	public function get_all_types() {
-		return (array) $this->types;
-	}
-
-	/**
-	 * Get value of the field
-	 *
-	 * @param  array $attr
-	 * @param  array $instance
-	 * @return string|int|bool
-	 */
-	private function set_value( array $attr, array $instance = [] ) {
-
-		if ( isset( $instance[ $attr['id'] ] ) ) {
-			return $instance[ $attr['id'] ];
-		}
-
-		if ( isset( $attr['value'] ) ) {
-			return $attr['value'];
-		}
-
-		if ( isset( $attr['default'] ) ) {
-			return $attr['default'];
-		}
-
-		return '';
-	}
+	private $field_container = '';
 
 	/**
 	 * Render the field type
@@ -113,7 +78,7 @@ class Fields implements Fields_Interface {
 		 * L'attributo for delle label è sempre associato all'ID
 		 * della input.
 		 */
-		$defaul_ID = uniqid();
+		$defaul_ID = \uniqid();
 		$default = [
 			'type'		=> 'text',
 			'id'		=> $defaul_ID,
@@ -122,12 +87,16 @@ class Fields implements Fields_Interface {
 			'class-p'	=> '', // Deprecated
 			'label'	    => '',
 			'desc'	    => '',
+			'container'	=> [
+				'tag'	=> 'div',
+				'attr'	=> [],
+			],
 		];
 
 		/**
 		 * Before setting the value merge $attr wit $default
 		 */
-		$attr = array_merge( $default, $attr );
+		$attr = array_replace_recursive( $default, $attr );
 		$attr['value'] = $this->set_value( $attr, $instance );
 
 		/**
@@ -164,17 +133,14 @@ class Fields implements Fields_Interface {
 			'validate',
 			'sanitize',
 			'section',
+			'container',
 		];
 
-		$wrapper = '<div%1$s>%2$s</div>';
-
-		/**
-		 * Run method
-		 */
-		return sprintf(
-			$wrapper,
-			HTML\get_attr( $attr['id'], [ 'class' => $attr['class-p'] ] ),
-			$this->get_view( $attr )
+		return $this->withContainer(
+			$attr['container']['tag'],
+			array_replace_recursive( [ 'class' => $attr['class-p'] ],  $attr['container']['attr'] ),
+			( new View_Factory() )
+				->make( $attr['type'] )
 				->with( 'label', $attr['label'] )
 				->with( 'desc', $attr['desc'] )
 				->render( $this->exclude_attrs( $attr, $excluded ) )
@@ -182,51 +148,46 @@ class Fields implements Fields_Interface {
 	}
 
 	/**
-	 * Render View
-	 *
-	 * @param  array  $attr
-     *
+	 * @param bool|string $tag
+	 * @param array $attr
+	 * @param string $content
 	 * @return string
 	 */
-	private function get_view( array $attr ) {
-
-		$type = (string) $attr['type'];
-		$search = strtolower($type);
-
-		if ( isset( $this->types[ $search ] ) ) {
-
-			return new $this->types[ $search ];
-
-		} elseif ( class_exists( $type ) ) {
-
-			$class = new $type();
-			// if ( $class instanceof RenderableElementInterface ) {
-			return $class;
-			// }
+	private function withContainer( $tag = '', array $attr = [], string $content = '' ): string {
+		if ( empty( $tag ) ) {
+			return $content;
 		}
 
-		return new $this->types['text'];
-
-		// throw new \Exception\UnknownTypeException(
-		//     sprintf(
-		//         'The given type "%s" is not an instance of "%s".',
-		//         $type,
-		//         'RenderableElementInterface::class'
-		//     )
-		// );
+		return sprintf(
+			'<%1$s%2$s>%3$s</%1$s>',
+			\esc_html( $tag ),
+			HTML\get_attr( isset( $attr['id'] ) ?? $tag, $attr ),
+			$content
+		);
 	}
 
 	/**
-	 * Get the field type
+	 * Get value of the field
 	 *
 	 * @param  array $attr
-	 * @param  array $instance This is the $instance variable of widget
-	 *                         or the options variable of the plugin.
-	 *
-	 * @return string           Return the field html
+	 * @param  array $instance
+	 * @return string|int|bool
 	 */
-	public function get_field_type( array $attr, array $instance ) {
-		return $this->render( $attr, $instance );
+	private function set_value( array $attr, array $instance = [] ) {
+
+		if ( isset( $instance[ $attr['id'] ] ) ) {
+			return $instance[ $attr['id'] ];
+		}
+
+		if ( isset( $attr['value'] ) ) {
+			return $attr['value'];
+		}
+
+		if ( isset( $attr['default'] ) ) {
+			return $attr['default'];
+		}
+
+		return '';
 	}
 
 	/**
@@ -311,5 +272,29 @@ class Fields implements Fields_Interface {
 		 * 'load_on'		=> is_my_function\return_bool(),
 		 */
 		return (bool) $attr[ 'show_on_cb' ];
+	}
+
+	/**
+	 * Get all types
+	 *
+	 * @return array [description]
+	 */
+	public function get_all_types() {
+		_deprecated_function( __FUNCTION__, '2.0', '( new View_Factory() )->getTypes()' );
+		return ( new View_Factory() )->getTypes();
+	}
+
+	/**
+	 * Get the field type
+	 *
+	 * @param  array $attr
+	 * @param  array $instance This is the $instance variable of widget
+	 *                         or the options variable of the plugin.
+	 *
+	 * @return string           Return the field html
+	 */
+	public function get_field_type( array $attr, array $instance ) {
+		_deprecated_function( __FUNCTION__, '2.0', '( new Fields() )->render()' );
+		return $this->render( $attr, $instance );
 	}
 }

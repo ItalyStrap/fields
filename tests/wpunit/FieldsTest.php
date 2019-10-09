@@ -132,8 +132,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
         $sut = $this->make_instance();
 
+        $all_types = ( new ItalyStrap\Fields\View_Factory() )->getTypes();
+
         $array_map = [];
-        foreach ( (array) $sut->get_all_types() as $key => $class ) {
+        foreach ( $all_types as $key => $class ) {
 
             if ( ! mb_strpos( $class, 'Input' ) ) {
                 continue;
