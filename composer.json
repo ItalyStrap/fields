@@ -2,15 +2,19 @@
     "name": "italystrap/fields",
     "description": "Classes and functions for handling fields",
     "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "overclokk",
-            "email": "info@overclokk.net"
+            "email": "info@overclokk.net",
+            "homepage": "https://www.italystrap.com",
+            "role": "Developer"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php" : ">=7.0",
-        "italystrap/helpers": "~1.0",
+        "italystrap/helpers": "~2.0",
         "italystrap/config": "~1.0"
     },
     "require-dev": {
@@ -22,6 +26,5 @@
         "psr-4": {
             "ItalyStrap\\Fields\\": "src/Fields/"
         }
-    },
-    "minimum-stability": "stable"
+    }
 }
