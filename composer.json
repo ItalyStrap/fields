@@ -14,8 +14,8 @@
     "minimum-stability": "stable",
     "require": {
         "php" : ">=7.0",
-        "italystrap/helpers": "~2.0",
-        "italystrap/config": "~1.0"
+        "italystrap/helpers": "*",
+        "italystrap/config": "*"
     },
     "require-dev": {
         "lucatume/wp-browser": "~2.2",
