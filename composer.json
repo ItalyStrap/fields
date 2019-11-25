@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "lucatume/wp-browser": "~2.2",
-        "italystrap/debug": "~1.1"
+        "italystrap/debug": "*"
     },
     "autoload": {
         "files": ["src/bootstrap.php"],
