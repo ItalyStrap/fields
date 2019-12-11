@@ -37,8 +37,8 @@ return [
 	'select'					=> View\Select::class,
 	'multiple_select'			=> View\Select::class,
 
-	'taxonomy_select'			=> View\Taxonomy_Select::class,
-	'taxonomy_multiple_select'	=> View\Taxonomy_Select::class,
+	'taxonomy_select'			=> View\TaxonomySelect::class,
+	'taxonomy_multiple_select'	=> View\TaxonomySelect::class,
 
 	'media'						=> View\Media::class,
 	'media_list'				=> View\Media::class,

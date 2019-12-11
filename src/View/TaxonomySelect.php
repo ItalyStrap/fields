@@ -9,7 +9,7 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Taxonomy_Select extends Select {
+class TaxonomySelect extends Select {
 
 	protected function render_options( array $attr ) {
 

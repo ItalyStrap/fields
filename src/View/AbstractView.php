@@ -4,7 +4,7 @@ namespace ItalyStrap\Fields\View;
 
 use ItalyStrap\HTML;
 
-class Abstract_View implements Renderable_Element_Interface {
+class AbstractView implements RenderableElementInterface {
 
 	protected $elements = [];
 

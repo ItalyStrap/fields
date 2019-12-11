@@ -9,7 +9,7 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Radio extends Abstract_View {
+class Radio extends AbstractView {
 
 	/**
 	 * @param array $attr

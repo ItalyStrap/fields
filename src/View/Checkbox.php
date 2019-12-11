@@ -9,7 +9,7 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Checkbox extends Abstract_View {
+class Checkbox extends AbstractView {
 
 	/**
 	 * @param array $attr

@@ -9,7 +9,7 @@ use ItalyStrap\HTML;
  *
  * @package ItalyStrap\Fields\View
  */
-class Select_Group extends Abstract_View {
+class SelectGroup extends AbstractView {
 
 	/**
 	 * @param array $attr

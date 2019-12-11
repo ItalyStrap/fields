@@ -16,7 +16,7 @@ use InvalidArgumentException;
 /**
  * Abstract class for fields functionality
  */
-abstract class Fields_Base implements Fields_Interface {
+abstract class FieldsBase implements Fields_Interface {
 
 	/**
 	 * Determine whether this field should show, based on the 'show_on_cb' callback.

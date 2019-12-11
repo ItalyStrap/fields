@@ -11,6 +11,7 @@
  * @version 2.0.0
  * @package ItalyStrap
  */
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields;
 
@@ -19,21 +20,12 @@ use ItalyStrap\HTML;
 /**
  * Class for make field type
  */
-class Fields implements Fields_Interface {
+class Fields implements FieldsInterface {
 
 	private $field_container = '';
 
 	/**
-	 * Render the field type
-	 *
-	 * @param  array $attr     The array with field arguments.
-	 * @param  array $instance This is the $instance variable of widget
-	 *                         or the options variable of the plugin.
-	 *                         Il funzionamento è semplice:
-	 *                         $instance[ ID ] mi restituisce il valore preso dal DB
-	 *                         Che può essere '' o valorizzato
-	 *
-	 * @return string           Return the html field
+	 * @inheritDoc
 	 */
 	public function render( array $attr, array $instance = [] ) {
 
@@ -197,7 +189,7 @@ class Fields implements Fields_Interface {
 	 * @param  array $attrs Attributes to concatenate.
 	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
 	 *
-	 * @return string               String of attributes for form element
+	 * @return array               String of attributes for form element
 	 */
 	private function exclude_attrs( array $attrs, array $attr_exclude = [] ) {
 		return array_diff_key( $attrs, array_flip( $attr_exclude ) );

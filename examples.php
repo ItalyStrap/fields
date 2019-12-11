@@ -280,7 +280,7 @@ function fields_example() {
 
 	$attr = array(
 		'type'			=> 'select',
-		'label'			=> 'Select with value from DB',
+		'label'			=> '\Select with value from database',
 		'id'            => 'select',
 		'show_option_none' => true,
 		'options'		=> [

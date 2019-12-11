@@ -8,7 +8,7 @@
 
 namespace ItalyStrap\Fields;
 
-use ItalyStrap\Fields\View\Renderable_Element_Interface;
+use ItalyStrap\Fields\View\RenderableElementInterface;
 
 class View_Factory {
 
@@ -25,9 +25,9 @@ class View_Factory {
 	 * Render View
 	 *
 	 * @param string $type
-	 * @return Renderable_Element_Interface
+	 * @return RenderableElementInterface
 	 */
-	public function make( $type = 'text' ): Renderable_Element_Interface {
+	public function make( $type = 'text' ): RenderableElementInterface {
 
 		$search = \strtolower( $type );
 
