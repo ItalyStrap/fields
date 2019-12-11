@@ -29,7 +29,6 @@ class Taxonomy_Select extends Select {
 
 		$attr['options'] = [];
 		foreach ( (array) $tax_arrays as $tax_obj ) {
-
 			if ( ! is_object( $tax_obj ) ) {
 				continue;
 			}

@@ -59,14 +59,14 @@ class Select extends Abstract_View {
 		$html = '';
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
-
 			$html .= sprintf(
 				'<option%s>%s</option>',
-				HTML\get_attr( 'option',
+				HTML\get_attr(
+					'option',
 					[
 						'value'		=> $value,
 						'selected'	=> $this->is_selected( $value, $attr['value'], $attr ),
-					]
+					 ]
 				),
 				esc_html( $option )
 			);
@@ -117,7 +117,8 @@ class Select extends Abstract_View {
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 
 		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
+			$out .= 'class="' . esc_attr( $key['class'] ) . '" ';
+		}
 
 		$out .= '> ';
 
@@ -131,21 +132,19 @@ class Select extends Abstract_View {
 		}
 
 		foreach ( (array) $key['options'] as $group => $options ) {
-
 			$out .= '<optgroup label="' . $group . '">';
 
 			foreach ( $options as $field => $option ) {
-
 				$out .= '<option value="' . esc_attr( $field ) . '" ';
 
 				if ( esc_attr( $selected ) === $field ) {
-					$out .= ' selected="selected" '; }
+					$out .= ' selected="selected" ';
+				}
 
 				$out .= '> ' . esc_html( $option ) . '</option>';
 			}
 
 			$out .= '</optgroup>';
-
 		}
 
 		$out .= '</select>';

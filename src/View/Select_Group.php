@@ -30,7 +30,8 @@ class Select_Group extends Abstract_View {
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 
 		if ( isset( $key['class'] ) ) {
-			$out .= 'class="' . esc_attr( $key['class'] ) . '" '; }
+			$out .= 'class="' . esc_attr( $key['class'] ) . '" ';
+		}
 
 		$out .= '> ';
 
@@ -44,27 +45,26 @@ class Select_Group extends Abstract_View {
 		}
 
 		foreach ( (array) $key['options'] as $group => $options ) {
-
 			$out .= '<optgroup label="' . $group . '">';
 
 			foreach ( $options as $field => $option ) {
-
 				$out .= '<option value="' . esc_attr( $field ) . '" ';
 
 				if ( esc_attr( $selected ) === $field ) {
-					$out .= ' selected="selected" '; }
+					$out .= ' selected="selected" ';
+				}
 
 				$out .= '> ' . esc_html( $option ) . '</option>';
 			}
 
 			$out .= '</optgroup>';
-
 		}
 
 		$out .= '</select>';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
+			$out .= $this->description( $key['desc'] );
+		}
 
 		return $out;
 

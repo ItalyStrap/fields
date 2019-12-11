@@ -32,11 +32,8 @@ class View_Factory {
 		$search = \strtolower( $type );
 
 		if ( isset( $this->types[ $search ] ) ) {
-
 			return new $this->types[ $search ];
-
 		} elseif ( \class_exists( $type ) ) {
-
 			$class = new $type();
 			// if ( $class instanceof Renderable_Element_Interface ) {
 			return $class;

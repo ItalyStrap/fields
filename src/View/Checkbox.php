@@ -59,7 +59,6 @@ class Checkbox extends Abstract_View {
 		$html = '';
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
-
 			$new_attr = array_merge(
 				$attr,
 				[

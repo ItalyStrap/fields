@@ -26,7 +26,6 @@ class Group extends Abstract_View {
 		);
 
 		foreach ( $key['group_field'] as $field ) {
-
 			$this->set_attr_id_name( $field );
 
 			/**

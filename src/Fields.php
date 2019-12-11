@@ -119,7 +119,7 @@ class Fields implements Fields_Interface {
 
 		/**
 		 * Before to render the field make sure
-         * the 'name' attr is not the same as the default
+		 * the 'name' attr is not the same as the default
 		 */
 		if ( $default['name'] === $attr['name'] ) {
 			$attr['name'] = $attr['id'];
@@ -138,7 +138,7 @@ class Fields implements Fields_Interface {
 
 		return $this->withContainer(
 			$attr['container']['tag'],
-			array_replace_recursive( [ 'class' => $attr['class-p'] ],  $attr['container']['attr'] ),
+			array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
 			( new View_Factory() )
 				->make( $attr['type'] )
 				->with( 'label', $attr['label'] )

@@ -2,8 +2,8 @@
 
 namespace ItalyStrap\Fields\View;
 
-interface Renderable_Element_Interface
-{
+interface Renderable_Element_Interface {
+
 	/**
 	 * @param ElementInterface $attr
 	 *
