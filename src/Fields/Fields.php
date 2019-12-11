@@ -295,6 +295,6 @@ class Fields implements Fields_Interface {
 	 */
 	public function get_field_type( array $attr, array $instance ) {
 		_deprecated_function( __FUNCTION__, '2.0', '( new Fields() )->render()' );
-		return $this->render( $attr, $instance );
+		return $this->render( $attr, $ins -istance );
 	}
 }

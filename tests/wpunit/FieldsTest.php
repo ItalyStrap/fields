@@ -18,7 +18,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      */
     private $attr = array();
 
-    public function setUp() {
+    public function setUp(): void {
         // before
         parent::setUp();
 
@@ -102,7 +102,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         // your set up methods here
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         // your tear down methods here
 
         // then
@@ -778,7 +778,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     public function get_fields_input_output( $type = 'text', $tag = 'input' ) {
 
         $sut = $this->make_instance();
-    
+
         $out = $sut->$tag(
             [],
             [
@@ -875,13 +875,13 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         $fields_type = $type;
 
         $test_type = 'test_type_' . $type;
-    
+
         $out = $sut->$fields_type( $this->$test_type );
 
         $this->dom->loadHTML( $out );
 
         return $this->dom->getElementById('widget_class');
-    
+
     }
 
     public function types_and_attributes_provider() {
