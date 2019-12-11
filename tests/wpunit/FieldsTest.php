@@ -132,7 +132,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
         $sut = $this->make_instance();
 
-        $all_types = ( new ItalyStrap\Fields\View_Factory() )->getTypes();
+        $all_types = ( new ItalyStrap\Fields\ViewFactory() )->getTypes();
 
         $array_map = [];
         foreach ( $all_types as $key => $class ) {

@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
 interface RenderableElementInterface {
 
 	/**
-	 * @param ElementInterface $attr
+	 * @param array $attr
 	 *
 	 * @return string
 	 */

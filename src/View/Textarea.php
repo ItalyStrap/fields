@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -16,23 +17,23 @@ class Textarea extends AbstractView {
 	 *
 	 * @return string
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 
 		$default = [
 			'cols'  => '60',
 			'rows'  => '10',
 		];
 
-		$attr = array_merge( $default, $attr );
+		$attr = \array_merge( $default, $attr );
 
 		$value = $attr['value'];
 		unset( $attr['value'] );
 
-		return sprintf(
+		return \sprintf(
 			'%s<textarea%s/>%s</textarea>%s',
 			$this->label(),
 			HTML\get_attr( 'input', $attr ),
-			esc_textarea( $value ),
+			\esc_textarea( $value ),
 			$this->description()
 		);
 	}

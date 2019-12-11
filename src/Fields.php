@@ -32,7 +32,7 @@ class Fields implements FieldsInterface {
 		/**
 		 * If field is requesting to be conditionally shown
 		 */
-		if ( ! $this->should_show( $attr ) ) {
+		if ( ! $this->shouldShow( $attr ) ) {
 			return '';
 		}
 
@@ -88,8 +88,8 @@ class Fields implements FieldsInterface {
 		/**
 		 * Before setting the value merge $attr wit $default
 		 */
-		$attr = array_replace_recursive( $default, $attr );
-		$attr['value'] = $this->set_value( $attr, $instance );
+		$attr = \array_replace_recursive( $default, $attr );
+		$attr['value'] = $this->setValue( $attr, $instance );
 
 		/**
 		 * Compat for widget and settings
@@ -101,8 +101,8 @@ class Fields implements FieldsInterface {
 		];
 
 		foreach ( $keys as $old => $new ) {
-			$old = trim( $old );
-			$new = trim( $new );
+			$old = \trim( $old );
+			$new = \trim( $new );
 			if ( isset( $attr[ $old ] ) ) {
 				$attr[ $new ] = $attr[ $old ];
 				unset( $attr[ $old ] );
@@ -130,12 +130,12 @@ class Fields implements FieldsInterface {
 
 		return $this->withContainer(
 			$attr['container']['tag'],
-			array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
-			( new View_Factory() )
+			\array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
+			( new ViewFactory() )
 				->make( $attr['type'] )
 				->with( 'label', $attr['label'] )
 				->with( 'desc', $attr['desc'] )
-				->render( $this->exclude_attrs( $attr, $excluded ) )
+				->render( $this->excludeAttrs( $attr, $excluded ) )
 		);
 	}
 
@@ -150,7 +150,7 @@ class Fields implements FieldsInterface {
 			return $content;
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<%1$s%2$s>%3$s</%1$s>',
 			\esc_html( $tag ),
 			HTML\get_attr( isset( $attr['id'] ) ?? $tag, $attr ),
@@ -165,7 +165,7 @@ class Fields implements FieldsInterface {
 	 * @param  array $instance
 	 * @return string|int|bool
 	 */
-	private function set_value( array $attr, array $instance = [] ) {
+	private function setValue( array $attr, array $instance = [] ) {
 
 		if ( isset( $instance[ $attr['id'] ] ) ) {
 			return $instance[ $attr['id'] ];
@@ -191,8 +191,8 @@ class Fields implements FieldsInterface {
 	 *
 	 * @return array               String of attributes for form element
 	 */
-	private function exclude_attrs( array $attrs, array $attr_exclude = [] ) {
-		return array_diff_key( $attrs, array_flip( $attr_exclude ) );
+	private function excludeAttrs( array $attrs, array $attr_exclude = [] ) {
+		return \array_diff_key( $attrs, \array_flip( $attr_exclude ) );
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Fields implements FieldsInterface {
 	 *
 	 * @return string               String of attributes for form element
 	 */
-	private function concat_attrs($attrs, $attr_exclude = [] ) {
+	private function concatAttrs( $attrs, $attr_exclude = [] ) {
 
 		$context = isset( $attrs['id'] ) ? $attrs['id'] : '';
 
@@ -220,7 +220,7 @@ class Fields implements FieldsInterface {
 		// }
 		// return $attributes;
 
-		return HTML\get_attr( $context, $this->exclude_attrs($attrs, $attr_exclude) );
+		return HTML\get_attr( $context, $this->excludeAttrs( $attrs, $attr_exclude ) );
 	}
 
 	/**
@@ -233,7 +233,7 @@ class Fields implements FieldsInterface {
 	 * @param $attr
 	 * @return bool Whether the field should be shown.
 	 */
-	private function should_show($attr) {
+	private function shouldShow( $attr ) {
 
 		/**
 		 * Default. Show the field
@@ -253,8 +253,8 @@ class Fields implements FieldsInterface {
 		/**
 		 * Use the callback to determine showing the field, if it exists
 		 */
-		if ( is_callable( $attr[ 'show_on_cb' ] ) ) {
-			return (bool) call_user_func( $attr[ 'show_on_cb' ], $this );
+		if ( \is_callable( $attr[ 'show_on_cb' ] ) ) {
+			return (bool) \call_user_func( $attr[ 'show_on_cb' ], $this );
 		}
 
 		/**
@@ -272,8 +272,8 @@ class Fields implements FieldsInterface {
 	 * @return array [description]
 	 */
 	public function get_all_types() {
-		_deprecated_function( __FUNCTION__, '2.0', '( new View_Factory() )->getTypes()' );
-		return ( new View_Factory() )->getTypes();
+		\_deprecated_function( __FUNCTION__, '2.0', '( new View_Factory() )->getTypes()' );
+		return ( new ViewFactory() )->getTypes();
 	}
 
 	/**
@@ -286,7 +286,7 @@ class Fields implements FieldsInterface {
 	 * @return string           Return the field html
 	 */
 	public function get_field_type( array $attr, array $instance ) {
-		_deprecated_function( __FUNCTION__, '2.0', '( new Fields() )->render()' );
+		\_deprecated_function( __FUNCTION__, '2.0', '( new Fields() )->render()' );
 		return $this->render( $attr, $instance );
 	}
 }

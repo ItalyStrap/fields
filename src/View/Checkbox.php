@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -16,12 +17,12 @@ class Checkbox extends AbstractView {
 	 *
 	 * @return string
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 
-		$checkboxes = $this->render_options( $attr );
+		$checkboxes = $this->renderOptions( $attr );
 
 		if ( $checkboxes ) {
-			return sprintf(
+			return \sprintf(
 				'%s%s',
 				$checkboxes,
 				$this->description()
@@ -36,7 +37,7 @@ class Checkbox extends AbstractView {
 		 * In tests I see that if only value as array is passed make sure
 		 * it is converted to string before inject to the get_attr()
 		 */
-		$attr['value'] = is_array( $attr['value'] ) ? $attr['value'][0] : $attr['value'];
+		$attr['value'] = \is_array( $attr['value'] ) ? $attr['value'][0] : $attr['value'];
 
 		unset( $attr['options'] );
 
@@ -48,7 +49,7 @@ class Checkbox extends AbstractView {
 		);
 	}
 
-	protected function render_options( array $attr ) {
+	protected function renderOptions( array $attr ) {
 
 		if ( ! isset( $attr['options'] ) ) {
 			$attr['options'] = [];
@@ -59,12 +60,12 @@ class Checkbox extends AbstractView {
 		$html = '';
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
-			$new_attr = array_merge(
+			$new_attr = \array_merge(
 				$attr,
 				[
 					'id'		=> $attr['id'] . '_' . $value,
 					'value'		=> $value,
-					'checked'	=> $this->is_checked( $value, $attr['value'], $attr ),
+					'checked'	=> $this->isChecked( $value, $attr['value'], $attr ),
 				]
 			);
 
@@ -73,7 +74,7 @@ class Checkbox extends AbstractView {
 
 			unset( $new_attr['options'] );
 
-			$html .= sprintf(
+			$html .= \sprintf(
 				'<p><input%s/>%s</p>',
 				HTML\get_attr( 'input', $new_attr ),
 				$this->label()
@@ -90,11 +91,11 @@ class Checkbox extends AbstractView {
 	 *
 	 * @return bool|string
 	 */
-	protected function is_checked( $needle, $haystack, array $attr ) {
+	protected function isChecked( $needle, $haystack, array $attr ) {
 
 		if (
-			is_array( $haystack )
-			&& in_array( $needle, $haystack, true )
+			\is_array( $haystack )
+			&& \in_array( $needle, $haystack, true )
 			|| $needle == $haystack
 		) {
 			return 'checked';

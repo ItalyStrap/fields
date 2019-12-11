@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -16,7 +17,7 @@ class Editor extends AbstractView {
 	 *
 	 * @return string
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 
 		$settings = [
 			'textarea_name' => $attr['name'],
@@ -26,17 +27,17 @@ class Editor extends AbstractView {
 			'teeny' => true,
 		];
 
-		ob_start();
+		\ob_start();
 
-		wp_editor(
+		\wp_editor(
 			$attr['value'], // Content
 			$attr['id'],	// Editor ID
 			$settings		// Settings
 		);
 
-		$output = ob_get_clean();
+		$output = \ob_get_clean();
 
-		return sprintf(
+		return \sprintf(
 			'%s%s%s',
 			$this->label(),
 			$output,

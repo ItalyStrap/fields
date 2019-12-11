@@ -10,4 +10,5 @@ declare(strict_types=1);
 
 namespace ItalyStrap\Fields;
 
-interface Fields_Interface {}
+interface Fields_Interface {
+}

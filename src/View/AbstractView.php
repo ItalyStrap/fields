@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -13,24 +14,33 @@ class AbstractView implements RenderableElementInterface {
 	 *
 	 * @return string
 	 */
-	public function render( array $attr ) {
-		$this->elements = array_merge( $this->elements, $attr );
-		return $this->maybe_render( $attr );
+	public function render( array $attr ): string {
+		$this->elements = \array_merge( $this->elements, $attr );
+		return $this->maybeRender( $attr );
 	}
 
 	/**
 	 * @param array $attr
 	 * @return mixed
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 		return '';
 	}
 
+	/**
+	 * @param $key
+	 * @param $value
+	 * @return $this
+	 */
 	public function with( $key, $value ) {
 		$this->set( $key, $value );
 		return $this;
 	}
 
+	/**
+	 * @param $key
+	 * @param $value
+	 */
 	protected function set( $key, $value ) {
 		$this->elements[ $key ] = $value;
 	}
@@ -55,7 +65,7 @@ class AbstractView implements RenderableElementInterface {
 	 * @return string       Return the label
 	 */
 	protected function label() {
-		return $this->render_tag( 'label', ['for' => (string) $this->get('id') ] );
+		return $this->renderTag( 'label', ['for' => (string) $this->get('id') ] );
 	}
 
 	/**
@@ -64,7 +74,7 @@ class AbstractView implements RenderableElementInterface {
 	 * @return string       Return the description
 	 */
 	protected function description() {
-		return $this->render_tag( 'desc', ['class' => 'description'] );
+		return $this->renderTag( 'desc', ['class' => 'description'] );
 	}
 
 	/**
@@ -73,7 +83,7 @@ class AbstractView implements RenderableElementInterface {
 	 * @return string       Return the description
 	 */
 	protected function legend() {
-		return $this->render_tag( 'legend', ['class' => 'legend'] );
+		return $this->renderTag( 'legend', ['class' => 'legend'] );
 	}
 
 	/**
@@ -84,7 +94,7 @@ class AbstractView implements RenderableElementInterface {
 	 *
 	 * @return string
 	 */
-	private function render_tag( $tag, $default_attr = [] ) {
+	private function renderTag( $tag, $default_attr = [] ) {
 
 		if ( empty( $this->elements[ $tag ] ) ) {
 			return '';
@@ -104,7 +114,7 @@ class AbstractView implements RenderableElementInterface {
 //                ],
 //            ],
 //        ];
-		if ( is_array( $this->elements[ $tag ] ) ) {
+		if ( \is_array( $this->elements[ $tag ] ) ) {
 			$content = (string) $this->elements[ $tag ]['content'];
 			$attr = (array) $this->elements[ $tag ]['attributes'];
 		} else {
@@ -120,7 +130,7 @@ class AbstractView implements RenderableElementInterface {
 		return sprintf(
 			isset( $format[ $tag ] ) ? (string) $format[ $tag ] : '%s %s',
 			HTML\get_attr( $this->get('id'), array_merge( $default_attr, $attr ) ),
-			wp_kses_post( $content )
+			\wp_kses_post( $content )
 		);
 	}
 }

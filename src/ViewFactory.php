@@ -5,12 +5,13 @@
  * Date: 18/12/2018
  * Time: 16:28
  */
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields;
 
 use ItalyStrap\Fields\View\RenderableElementInterface;
 
-class View_Factory {
+class ViewFactory {
 
 	private $types;
 
@@ -18,7 +19,7 @@ class View_Factory {
 	 * View_Factory constructor.
 	 */
 	public function __construct() {
-		$this->types = require( __DIR__ . '/../../config/types.php' );
+		$this->types = require __DIR__ . '/../../config/types.php' ;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -16,41 +17,41 @@ class Radio extends AbstractView {
 	 *
 	 * @return string
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 
 		if ( isset( $attr['legend'] ) ) {
 			$this->set( 'legend', $attr['legend'] );
 			unset( $attr['legend'] );
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset>%s%s%s</fieldset>',
 			$this->legend(),
-			$this->render_options( $attr ),
+			$this->renderOptions( $attr ),
 			$this->description()
 		);
 	}
 
-	protected function render_options( array $attr ) {
+	protected function renderOptions( array $attr ) {
 
 		if ( ! isset( $attr['options'] ) ) {
 			$attr['options'] = [];
 		}
 
 		if ( isset( $attr['show_option_none'] ) ) {
-			$none = is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
+			$none = \is_string( $attr['show_option_none'] ) ? $attr['show_option_none'] : __( 'None', 'italystrap' ) ;
 			$attr['options'] = [ $none ] + $attr['options'];
 		}
 
 		$html = '';
 
 		foreach ( (array) $attr['options'] as $value => $option ) {
-			$new_attr = array_merge(
+			$new_attr = \array_merge(
 				$attr,
 				[
 					'id'		=> $attr['id'] . '_' . $value,
 					'value'		=> $value,
-					'checked'	=> $this->is_checked( $value, $attr['value'], $attr ),
+					'checked'	=> $this->isChecked( $value, $attr['value'], $attr ),
 				]
 			);
 
@@ -59,7 +60,7 @@ class Radio extends AbstractView {
 
 			unset( $new_attr['options'] );
 
-			$html .= sprintf(
+			$html .= \sprintf(
 				'<p><input%s/>%s</p>',
 				HTML\get_attr( 'input', $new_attr ),
 				$this->label()
@@ -76,7 +77,7 @@ class Radio extends AbstractView {
 	 *
 	 * @return bool|string
 	 */
-	protected function is_checked( $needle, $haystack, array $attr ) {
+	protected function isChecked( $needle, $haystack, array $attr ) {
 
 		return $needle == $haystack;
 

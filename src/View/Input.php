@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace ItalyStrap\Fields\View;
 
@@ -16,9 +17,9 @@ class Input extends AbstractView {
 	 *
 	 * @return string
 	 */
-	protected function maybe_render( array $attr ) {
+	protected function maybeRender( array $attr ) {
 
-		return sprintf(
+		return \sprintf(
 			'%s<input%s/>%s',
 			$this->label(),
 			HTML\get_attr( 'input', $attr ),
