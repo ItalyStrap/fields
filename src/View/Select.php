@@ -111,7 +111,8 @@ class Select extends Abstract_View {
 	 */
 	private function select_group(array $key, $out = '' ) {
 
-		$out .= $this->label( $key['name'], $key['_id'] );
+//		$out .= $this->label( $key['name'], $key['_id'] );
+		$out .= $this->label();
 
 		$out .= '<select id="' . esc_attr( $key['_id'] ) . '" name="' . esc_attr( $key['_name'] ) . '" ';
 
@@ -150,7 +151,9 @@ class Select extends Abstract_View {
 		$out .= '</select>';
 
 		if ( isset( $key['desc'] ) ) {
-			$out .= $this->description( $key['desc'] ); }
+//			$out .= $this->description( $key['desc'] );
+			$out .= $this->description();
+		}
 
 		return $out;
 	}

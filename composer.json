@@ -28,15 +28,14 @@
         "szepeviktor/phpstan-wordpress": "^0.3.0"
     },
     "autoload": {
-        "files": ["src/bootstrap.php"],
         "psr-4": {
-            "ItalyStrap\\Fields\\": "src/Fields/"
+            "ItalyStrap\\Fields\\": "src/"
         }
     },
     "scripts": {
         "check": [
-            ".\\vendor\\bin\\phpcs -p --standard=PHPCompatibility src",
-            ".\\vendor\\bin\\phpcs -p --standard=WordPress src"
+            ".\\vendor\\bin\\phpcs -p -s --standard=phpcs.xml src",
+            ".\\vendor\\bin\\phpstan analyse"
         ],
         "test": [
             "test"
