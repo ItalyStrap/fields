@@ -13,7 +13,7 @@ use ItalyStrap\Fields\View\RenderableElementInterface;
 
 class ViewFactory {
 
-	protected $types = [
+	protected static $types = [
 		'button'					=> View\Input::class,
 		'color'						=> View\Input::class,
 		'date'						=> View\Input::class,
@@ -58,18 +58,18 @@ class ViewFactory {
 	 * @param string $type
 	 * @return RenderableElementInterface
 	 */
-	public function make( $type = 'text' ): RenderableElementInterface {
+	public static function make( $type = 'text' ): RenderableElementInterface {
 
 		$search = \strtolower( \strval( $type ) );
 
-		if ( isset( $this->types[ $search ] ) ) {
-			return new $this->types[ $search ];
+		if ( isset( self::$types[ $search ] ) ) {
+			return new self::$types[ $search ];
 		} elseif ( \class_exists( $type ) ) {
 			$class = new $type();
 			return $class;
 		}
 
-		return new $this->types['text'];
+		return new self::$types['text'];
 	}
 
 	/**
@@ -77,7 +77,7 @@ class ViewFactory {
 	 *
 	 * @return array Return all fields type
 	 */
-	public function getTypes(): array {
-		return (array) $this->types;
+	public static function getTypes(): array {
+		return (array) self::$types;
 	}
 }
