@@ -35,8 +35,8 @@
     },
     "scripts": {
         "check": [
-            ".\\vendor\\bin\\phpcs -p -s --standard=phpcs.xml src",
-            ".\\vendor\\bin\\phpstan analyse"
+            "phpcs -p -s --standard=phpcs.xml src",
+            "phpstan analyse"
         ],
         "test": [
             "test"
