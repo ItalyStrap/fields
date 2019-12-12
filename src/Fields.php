@@ -27,7 +27,7 @@ class Fields implements FieldsInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public function render( array $attr, array $instance = [] ) {
+	public function render( array $attr, array $instance = [] ): string {
 
 		/**
 		 * If field is requesting to be conditionally shown
@@ -36,80 +36,11 @@ class Fields implements FieldsInterface {
 			return '';
 		}
 
-//		$deprecated = [
-//			'class-p',
-//        ];
-
-//		foreach ( $deprecated as $val ) {
-//			if ( isset( $attr[ $val ] ) ) {
-//				_deprecated_argument(
-//					__FUNCTION__,
-//					'1.0',
-//					sprintf(
-//						'"$s" attribute is deprecated.',
-//                        $val
-//                    )
-//				);
-//			}
-//        }
-
-		/**
-		 * Questo lo setto con il default perché
-		 * i widget per esempio settano il name con [id]
-		 * così non devo fare nessun check e durante il merge
-		 * verrà sovrascritto.
-		 *
-		 * Nei setting ID e name sono così:
-		 * id="italystrap_settings[show-ids]"
-		 * name="italystrap_settings[show-ids]"
-		 *
-		 * Nei widget così;
-		 * id="widget-italystrap-posts-6-add_permalink_wrapper"
-		 * name="widget-italystrap-posts[6][add_permalink_wrapper]"
-		 *
-		 * L'attributo for delle label è sempre associato all'ID
-		 * della input.
-		 */
-		$default_ID = \uniqid();
-		$default = [
-			'type'		=> 'text',
-			'id'		=> $default_ID,
-			'name'		=> $default_ID,
-//			'default'	=> '', // Deprecated
-			'class-p'	=> '', // Deprecated
-			'label'	    => '',
-			'desc'	    => '',
-			'container'	=> [
-				'tag'	=> 'div',
-				'attr'	=> [],
-			],
-		];
-
-		/**
-		 * Filter $attr and remove empty value
-		 * Before setting the value merge $attr with $default
-		 */
-		$attr = (array) \array_replace_recursive( $default, \array_filter( $attr ) );
+		list( $default, $attr ) = $this->parseWithDefault( $attr );
 
 		$attr['value'] = $this->setValue( $attr, $instance );
 
-		/**
-		 * Compat for widget and settings
-		 * Set after the value is setted.
-		 */
-		$keys = [
-			'_id'   => 'id',
-			'_name' => 'name',
-		];
-
-		foreach ( $keys as $old => $new ) {
-			$old = \trim( $old );
-			$new = \trim( $new );
-			if ( isset( $attr[ $old ] ) ) {
-				$attr[ $new ] = $attr[ $old ];
-				unset( $attr[ $old ] );
-			}
-		}
+		$attr = $this->assertCompatWithWidget( $attr );
 
 		/**
 		 * Before to render the field make sure
@@ -139,6 +70,78 @@ class Fields implements FieldsInterface {
 				->with( 'desc', $attr['desc'] )
 				->render( $this->excludeAttrs( $attr, $excluded ) )
 		);
+	}
+
+	/**
+	 * @param array $attr
+	 * @return array
+	 */
+	private function parseWithDefault( array $attr ): array {
+
+		/**
+		 * Questo lo setto con il default perché
+		 * i widget per esempio settano il name con [id]
+		 * così non devo fare nessun check e durante il merge
+		 * verrà sovrascritto.
+		 *
+		 * Nei setting ID e name sono così:
+		 * id="italystrap_settings[show-ids]"
+		 * name="italystrap_settings[show-ids]"
+		 *
+		 * Nei widget così;
+		 * id="widget-italystrap-posts-6-add_permalink_wrapper"
+		 * name="widget-italystrap-posts[6][add_permalink_wrapper]"
+		 *
+		 * L'attributo for delle label è sempre associato all'ID
+		 * della input.
+		 */
+		$default_ID = \uniqid();
+		$default = [
+			'type' => 'text',
+			'id' => $default_ID,
+			'name' => $default_ID,
+//			'default'	=> '', // Deprecated
+			'class-p' => '', // Deprecated
+			'label' => '',
+			'desc' => '',
+			'container' => [
+				'tag' => 'div',
+				'attr' => [],
+			],
+		];
+
+		/**
+		 * Filter $attr and remove empty value
+		 * Before setting the value merge $attr with $default
+		 */
+		$attr = (array)\array_replace_recursive( $default, \array_filter( $attr ) );
+
+		return [ $default, $attr ];
+	}
+
+	/**
+	 * @param array $attr
+	 * @return array
+	 */
+	private function assertCompatWithWidget( array $attr ): array {
+		/**
+		 * Compat for widget and settings
+		 * Set after the value is setted.
+		 */
+		$keys = [
+			'_id' => 'id',
+			'_name' => 'name',
+		];
+
+		foreach ($keys as $old => $new) {
+			$old = \trim( $old );
+			$new = \trim( $new );
+			if ( isset( $attr[ $old ] ) ) {
+				$attr[ $new ] = $attr[ $old ];
+				unset( $attr[ $old ] );
+			}
+		}
+		return $attr;
 	}
 
 	/**
@@ -200,34 +203,6 @@ class Fields implements FieldsInterface {
 	}
 
 	/**
-	 * Combines attributes into a string for a form element
-	 *
-	 * @since  2.0.0
-	 * @param  array $attrs Attributes to concatenate.
-	 * @param  array $attr_exclude Attributes that should NOT be concatenated.
-	 *
-	 * @return string               String of attributes for form element
-	 */
-	private function concatAttrs( $attrs, $attr_exclude = [] ) {
-
-		$context = isset( $attrs['id'] ) ? $attrs['id'] : '';
-
-		// $attributes = '';
-		// foreach ( $attrs as $attr => $val ) {
-		// 	$excluded = in_array( $attr, (array) $attr_exclude, true );
-		// 	$empty    = false === $val && 'value' !== $attr;
-		// 	if ( ! $excluded && ! $empty ) {
-		// 		// If data attribute, use single quote wraps, else double.
-		// 		$quotes = stripos( $attr, 'data-' ) !== false ? "'" : '"';
-		// 		$attributes .= sprintf( ' %1$s=%3$s%2$s%3$s', $attr, $val, $quotes );
-		// 	}
-		// }
-		// return $attributes;
-
-		return HTML\get_attr( $context, $this->excludeAttrs( $attrs, $attr_exclude ) );
-	}
-
-	/**
 	 * Determine whether this field should show, based on the 'show_on_cb' callback.
 	 * Forked from CMB2
 	 * @see CMB2_Field.php
@@ -281,11 +256,9 @@ class Fields implements FieldsInterface {
 			case 'get_all_types':
 				\_deprecated_function( 'get_all_types', '2.0', 'View_Factory::getTypes()' );
 				return ( new ViewFactory() )->getTypes();
-				break;
 			case 'get_field_type':
 				\_deprecated_function( __FUNCTION__, '2.0', \sprintf( '%s::render()', __CLASS__ ) );
 				return \call_user_func_array( array( $this, 'render' ), $params );
-				break;
 			default:
 				// Call to undefined method ItalyStrap\Fields\Fields::test()
 				throw new \BadMethodCallException( \sprintf( 'Call to undefined method  %s::%s()', __CLASS__, $fun ) );

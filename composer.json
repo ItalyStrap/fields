@@ -13,8 +13,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php" : ">=7.0",
-        "italystrap/helpers": "*",
+        "php" : ">=7.2",
+        "italystrap/html": "^1.1.2",
         "italystrap/config": "*"
     },
     "require-dev": {

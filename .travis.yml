@@ -7,10 +7,7 @@ notifications:
   email: false
 
 php:
-  - '7.1'
   - '7.2'
-  - '7.3'
-  - nightly
 
 matrix:
   fast_finish: true
@@ -107,8 +104,5 @@ before_script:
   - codecept build
 
 script:
-  # - codecept run acceptance
-  # - codecept run functional
-  # - codecept run integration
-  # - codecept run unit
-  - codecept run wpunit
+  - composer check
+  - codecept run wpunit && codecept run unit
