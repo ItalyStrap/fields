@@ -10,7 +10,6 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     paths:
         - %currentWorkingDirectory%/src/
-        - %currentWorkingDirectory%/config/
     excludes_analyse:
         #- %currentWorkingDirectory%/src/Config/
     autoload_files:
