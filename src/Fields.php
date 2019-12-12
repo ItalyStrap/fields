@@ -64,8 +64,7 @@ class Fields implements FieldsInterface {
 		return $this->withContainer(
 			$attr['container']['tag'],
 			(array) \array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
-			( new ViewFactory() )
-				->make( $attr['type'] )
+			ViewFactory::make( $attr['type'] )
 				->with( 'label', $attr['label'] )
 				->with( 'desc', $attr['desc'] )
 				->render( $this->excludeAttrs( $attr, $excluded ) )

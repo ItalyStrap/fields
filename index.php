@@ -30,4 +30,7 @@ Domain Path: Domain Path
 */
 
 require( __DIR__ . '/vendor/autoload.php' );
-require( 'examples.php' );
+
+if ( \defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+	require( 'examples.php' );
+}
