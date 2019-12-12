@@ -70,11 +70,11 @@ class Fields implements FieldsInterface {
 		 * L'attributo for delle label è sempre associato all'ID
 		 * della input.
 		 */
-		$defaul_ID = \uniqid();
+		$default_ID = \uniqid();
 		$default = [
 			'type'		=> 'text',
-			'id'		=> $defaul_ID,
-			'name'		=> $defaul_ID,
+			'id'		=> $default_ID,
+			'name'		=> $default_ID,
 //			'default'	=> '', // Deprecated
 			'class-p'	=> '', // Deprecated
 			'label'	    => '',
@@ -86,9 +86,11 @@ class Fields implements FieldsInterface {
 		];
 
 		/**
-		 * Before setting the value merge $attr wit $default
+		 * Filter $attr and remove empty value
+		 * Before setting the value merge $attr with $default
 		 */
-		$attr = \array_replace_recursive( $default, $attr );
+		$attr = (array) \array_replace_recursive( $default, \array_filter( $attr ) );
+
 		$attr['value'] = $this->setValue( $attr, $instance );
 
 		/**
@@ -130,7 +132,7 @@ class Fields implements FieldsInterface {
 
 		return $this->withContainer(
 			$attr['container']['tag'],
-			\array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
+			(array) \array_replace_recursive( [ 'class' => $attr['class-p'] ], $attr['container']['attr'] ),
 			( new ViewFactory() )
 				->make( $attr['type'] )
 				->with( 'label', $attr['label'] )
@@ -140,7 +142,7 @@ class Fields implements FieldsInterface {
 	}
 
 	/**
-	 * @param bool|string $tag
+	 * @param string $tag
 	 * @param array $attr
 	 * @param string $content
 	 * @return string
@@ -150,10 +152,12 @@ class Fields implements FieldsInterface {
 			return $content;
 		}
 
+		$context = \strval( isset( $attr['id'] ) ?? $tag );
+
 		return \sprintf(
 			'<%1$s%2$s>%3$s</%1$s>',
-			\esc_html( $tag ),
-			HTML\get_attr( isset( $attr['id'] ) ?? $tag, $attr ),
+			\esc_html( \strval( $tag ) ),
+			HTML\get_attr( $context, $attr ),
 			$content
 		);
 	}
@@ -230,7 +234,7 @@ class Fields implements FieldsInterface {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param $attr
+	 * @param array $attr
 	 * @return bool Whether the field should be shown.
 	 */
 	private function shouldShow( $attr ) {
@@ -267,26 +271,24 @@ class Fields implements FieldsInterface {
 	}
 
 	/**
-	 * Get all types
-	 *
-	 * @return array [description]
+	 * @param string $fun
+	 * @param mixed $params
+	 * @return array|string|void
 	 */
-	public function get_all_types() {
-		\_deprecated_function( __FUNCTION__, '2.0', '( new View_Factory() )->getTypes()' );
-		return ( new ViewFactory() )->getTypes();
-	}
+	public function __call( $fun, $params ) {
 
-	/**
-	 * Get the field type
-	 *
-	 * @param  array $attr
-	 * @param  array $instance This is the $instance variable of widget
-	 *                         or the options variable of the plugin.
-	 *
-	 * @return string           Return the field html
-	 */
-	public function get_field_type( array $attr, array $instance ) {
-		\_deprecated_function( __FUNCTION__, '2.0', '( new Fields() )->render()' );
-		return $this->render( $attr, $instance );
+		switch ( $fun ) {
+			case 'get_all_types':
+				\_deprecated_function( 'get_all_types', '2.0', 'View_Factory::getTypes()' );
+				return ( new ViewFactory() )->getTypes();
+				break;
+			case 'get_field_type':
+				\_deprecated_function( __FUNCTION__, '2.0', \sprintf( '%s::render()', __CLASS__ ) );
+				return \call_user_func_array( array( $this, 'render' ), $params );
+				break;
+			default:
+				// Call to undefined method ItalyStrap\Fields\Fields::test()
+				throw new \BadMethodCallException( \sprintf( 'Call to undefined method  %s::%s()', __CLASS__, $fun ) );
+		}
 	}
 }

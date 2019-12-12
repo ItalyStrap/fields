@@ -28,9 +28,7 @@ class AbstractView implements RenderableElementInterface {
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
-	 * @return $this
+	 * @inheritDoc
 	 */
 	public function with( $key, $value ) {
 		$this->set( $key, $value );
@@ -38,8 +36,8 @@ class AbstractView implements RenderableElementInterface {
 	}
 
 	/**
-	 * @param $key
-	 * @param $value
+	 * @param string $key
+	 * @param mixed $value
 	 */
 	protected function set( $key, $value ) {
 		$this->elements[ $key ] = $value;
@@ -127,9 +125,9 @@ class AbstractView implements RenderableElementInterface {
 			'desc'		=> '<p%s>%s</p>',
 		];
 
-		return sprintf(
+		return \sprintf(
 			isset( $format[ $tag ] ) ? (string) $format[ $tag ] : '%s %s',
-			HTML\get_attr( $this->get('id'), array_merge( $default_attr, $attr ) ),
+			HTML\get_attr( (string) $this->get( 'id' ), \array_merge( $default_attr, $attr ) ),
 			\wp_kses_post( $content )
 		);
 	}

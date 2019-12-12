@@ -12,7 +12,7 @@ namespace ItalyStrap\Fields;
  * Interface FieldsInterface
  * @package ItalyStrap\Fields
  */
-interface FieldsInterface extends Fields_Interface {
+interface FieldsInterface {
 
 	/**
 	 * Render the field type

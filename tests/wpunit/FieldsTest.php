@@ -22,7 +22,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         // before
         parent::setUp();
 
-        $this->fields_array = require( __DIR__ . '\..\_data\fields.php' );
+        $this->fields_array = require codecept_data_dir() . '\fields.php';
 
         $this->dom = new \DOMDocument();
 
@@ -109,7 +109,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
         parent::tearDown();
     }
 
-    private function make_instance() {
+    private function getInstance() {
         return new Fields();
     }
 
@@ -119,10 +119,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      */
     public function it_should_be_instantiatable()
     {
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
 
-        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields', $sut );
-        $this->assertInstanceOf( '\ItalyStrap\Fields\Fields_Interface', $sut );
+		$this->assertInstanceOf( ItalyStrap\Fields\FieldsInterface::class, $sut );
+        $this->assertInstanceOf( ItalyStrap\Fields\Fields::class, $sut );
     }
 
     /**
@@ -130,7 +130,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      */
     public function input_types_provider() {
 
-        $sut = $this->make_instance();
+//        $sut = $this->getInstance();
 
         $all_types = ( new ItalyStrap\Fields\ViewFactory() )->getTypes();
 
@@ -140,7 +140,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
             if ( ! mb_strpos( $class, 'Input' ) ) {
                 continue;
             }
-            $array_map[ $key ] = [ $class ];
+            $array_map[] = [ $class => $key ];
+            break;
         }
         return $array_map;
     }
@@ -152,10 +153,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      */
     public function it_should_be_render_input_types( $type ) {
 
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
         $html = $sut->render( [ 'type' => $type ] );
 
-        $this->assertContains( 'type="' . $type . '"', $html );
+        $this->assertStringContainsString( 'type="' . $type . '"', $html );
     }
 
 	/**
@@ -164,7 +165,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_have_element_container() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'text',
 			'label' => 'With Span Container element',
@@ -178,9 +179,9 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( '<span', $html );
-		$this->assertContains( 'id="some_id"', $html );
-		$this->assertContains( 'class="some class"', $html );
+		$this->assertStringContainsString( '<span', $html );
+		$this->assertStringContainsString( 'id="some_id"', $html );
+		$this->assertStringContainsString( 'class="some class"', $html );
 	}
 
 	/**
@@ -189,7 +190,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_not_have_element_container() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'text',
 			'id'	=> 'no_container',
@@ -202,8 +203,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 
 
 
-		$this->assertNotContains( 'div', $html );
-		$this->assertContains( $expected, $html );
+		$this->assertStringNotContainsString( 'div', $html );
+		$this->assertStringContainsString( $expected, $html );
 	}
 
 	/**
@@ -212,11 +213,12 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_type_text_by_default() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$html = $sut->render( ['type' => null ] );
+		$this->assertStringContainsString( '<input type="text"', $html );
 
-//        $this->assertContains( 'type="text"', $html );
-		$this->assertContains( '<input', $html );
+		$html = $sut->render( [] );
+		$this->assertStringContainsString( '<input type="text"', $html );
 	}
 
 	/**
@@ -225,7 +227,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_id_name_correct() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 
 		/**
 		 * In ItalyStrap\Settings API
@@ -237,10 +239,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'id="' . $expected . '"', $html );
-		$this->assertContains( 'name="' . $expected . '"', $html );
-		$this->assertNotContains( '_id="' . $expected . '"', $html );
-		$this->assertNotContains( '_name="' . $expected . '"', $html );
+		$this->assertStringContainsString( 'id="' . $expected . '"', $html );
+		$this->assertStringContainsString( 'name="' . $expected . '"', $html );
+		$this->assertStringNotContainsString( '_id="' . $expected . '"', $html );
+		$this->assertStringNotContainsString( '_name="' . $expected . '"', $html );
 
 		/**
 		 * In ItalyStrap\Widget
@@ -254,10 +256,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'id="' . $expected_id . '"', $html );
-		$this->assertContains( 'name="' . $expected_name . '"', $html );
-		$this->assertNotContains( '_id="' . $expected_id . '"', $html );
-		$this->assertNotContains( '_name="' . $expected_name . '"', $html );
+		$this->assertStringContainsString( 'id="' . $expected_id . '"', $html );
+		$this->assertStringContainsString( 'name="' . $expected_name . '"', $html );
+		$this->assertStringNotContainsString( '_id="' . $expected_id . '"', $html );
+		$this->assertStringNotContainsString( '_name="' . $expected_name . '"', $html );
 	}
 
 	/**
@@ -266,13 +268,13 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_type_checkbox() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'checkbox'
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'type="checkbox"', $html );
+		$this->assertStringContainsString( 'type="checkbox"', $html );
 	}
 
 	/**
@@ -281,15 +283,15 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_have_id_and_name_with_same_value() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'text',
 			'id'	=> 'foo',
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'id="foo"', $html );
-		$this->assertContains( 'name="foo"', $html );
+		$this->assertStringContainsString( 'id="foo"', $html );
+		$this->assertStringContainsString( 'name="foo"', $html );
 	}
 
 	/**
@@ -298,7 +300,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_type_textarea() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'textarea',
 			'id'	=> 'foo',
@@ -306,11 +308,11 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'type="textarea"', $html );
-		$this->assertContains( 'id="foo"', $html );
-		$this->assertContains( 'name="foo"', $html );
-		$this->assertContains( '>Some text</textarea>', $html );
-		$this->assertNotContains( 'value="' . $attr['value'] . '"', $html );
+		$this->assertStringContainsString( 'type="textarea"', $html );
+		$this->assertStringContainsString( 'id="foo"', $html );
+		$this->assertStringContainsString( 'name="foo"', $html );
+		$this->assertStringContainsString( '>Some text</textarea>', $html );
+		$this->assertStringNotContainsString( 'value="' . $attr['value'] . '"', $html );
 	}
 
 	/**
@@ -319,7 +321,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_type_editor() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'	=> 'editor',
 			'id'	=> 'foo',
@@ -327,14 +329,14 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( 'class="wp-editor-container"', $html );
-		$this->assertContains( 'id="foo"', $html );
-		$this->assertContains( 'name="foo"', $html );
-		$this->assertContains( '>Some text</textarea>', $html );
+		$this->assertStringContainsString( 'class="wp-editor-container"', $html );
+		$this->assertStringContainsString( 'id="foo"', $html );
+		$this->assertStringContainsString( 'name="foo"', $html );
+		$this->assertStringContainsString( '>Some text</textarea>', $html );
 	}
 
 	private function get_html( $cb ) {
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr[ 'type' ] = 'text';
 		$attr[ 'show_on_cb' ] = $cb;
 		return $sut->render( $attr );
@@ -360,7 +362,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 * @dataProvider  show_on_cb_show_provider
 	 */
 	public function it_should_be_shown( $cb ) {
-		$this->assertContains( '<input', $this->get_html( $cb ) );
+		$this->assertStringContainsString( '<input', $this->get_html( $cb ) );
 	}
 
 	/**
@@ -393,10 +395,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     public function it_should_have_label()
     {
 
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
         $html = $sut->render( ['label' => 'Title label' ] );
 
-        $this->assertContains( 'Title label', $html );
+        $this->assertStringContainsString( 'Title label', $html );
 
         $html = $sut->render(
             [
@@ -409,8 +411,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
             ]
         );
 
-        $this->assertContains( 'Title label', $html );
-        $this->assertContains( 'class="some_class"', $html );
+        $this->assertStringContainsString( 'Title label', $html );
+        $this->assertStringContainsString( 'class="some_class"', $html );
 
     }
 
@@ -420,10 +422,10 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
     public function it_should_have_description()
     {
 
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
         $html = $sut->render( ['desc' => 'Description' ] );
 
-        $this->assertContains( 'Description', $html );
+        $this->assertStringContainsString( 'Description', $html );
 
         $html = $sut->render( ['desc' => [
             'content'      => 'Description',
@@ -432,8 +434,8 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
             ],
         ] ] );
 
-        $this->assertContains( 'Description', $html );
-        $this->assertContains( 'class="some_desc_class"', $html );
+        $this->assertStringContainsString( 'Description', $html );
+        $this->assertStringContainsString( 'class="some_desc_class"', $html );
 
     }
 
@@ -494,7 +496,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	private function get_checkbox( $default, $value, $instance_val, $options = null ) {
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr[ 'type' ] = 'checkbox';
 
 		$id = 'checkbox_ID';
@@ -517,9 +519,9 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$needle = 'checked';
 
 		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
-			$this->assertNotContains( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
+			$this->assertStringNotContainsString( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
 		} else {
-			$this->assertContains( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
+			$this->assertStringContainsString( $needle, $this->get_checkbox( $default, $value, $instance_val, $options ) );
 		}
 	}
 
@@ -564,7 +566,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	}
 
 	private function get_radio( $default, $value, $instance_val ) {
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr[ 'type' ] = 'radio';
 
 		$id = 'radio_ID';
@@ -590,9 +592,9 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$needle = 'checked';
 
 		if ( '' === $instance_val || ( is_null( $default ) && is_null( $value ) && is_null( $instance_val ) ) ) {
-			$this->assertNotContains( $needle, $this->get_radio( $default, $value, $instance_val ) );
+			$this->assertStringNotContainsString( $needle, $this->get_radio( $default, $value, $instance_val ) );
 		} else {
-			$this->assertContains( $needle, $this->get_radio( $default, $value, $instance_val ) );
+			$this->assertStringContainsString( $needle, $this->get_radio( $default, $value, $instance_val ) );
 		}
 	}
 
@@ -602,7 +604,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	 */
 	public function it_should_be_type_select() {
 
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'		=> 'select',
 			'id'		=> 'foo',
@@ -612,11 +614,11 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		];
 		$html = $sut->render( $attr );
 
-		$this->assertContains( '<select', $html );
-		$this->assertContains( 'id="foo"', $html );
-		$this->assertContains( 'name="foo"', $html );
-		$this->assertContains( '<option value="value"', $html );
-		$this->assertContains( 'Title</option>', $html );
+		$this->assertStringContainsString( '<select', $html );
+		$this->assertStringContainsString( 'id="foo"', $html );
+		$this->assertStringContainsString( 'name="foo"', $html );
+		$this->assertStringContainsString( '<option value="value"', $html );
+		$this->assertStringContainsString( 'Title</option>', $html );
 	}
 
 	public function selected()
@@ -660,7 +662,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 	public function it_should_be_type_select_selected( $multiple, $value, $instance_val )
 	{
 		$id = uniqid();
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'		=> 'select',
 			'id'		=> $id,
@@ -686,7 +688,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 			$value = $instance_val;
 		}
 
-		$this->assertContains( 'None</option>', $html );
+		$this->assertStringContainsString( 'None</option>', $html );
 
 		/**
 		 * Multiple true
@@ -696,23 +698,23 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		 * selected da default o instance
 		 */
 		if ( $multiple ) {
-			$this->assertContains( 'multiple', $html );
+			$this->assertStringContainsString( 'multiple', $html );
 			if ( is_array( $value ) ) {
 				foreach ( $value as $k => $item ) {
-					$this->assertContains( '<option value="' . $item . '" selected="selected">', $html );
+					$this->assertStringContainsString( '<option value="' . $item . '" selected="selected">', $html );
 				}
 			} elseif ( is_string( $value ) && ! empty( $value ) ) {
-				$this->assertContains( '<option value="' . $value . '" selected="selected">', $html );
+				$this->assertStringContainsString( '<option value="' . $value . '" selected="selected">', $html );
 			} else {
-				$this->assertNotContains( '" selected="selected">', $html );
+				$this->assertStringNotContainsString( '" selected="selected">', $html );
 			}
 
 		} else {
-			$this->assertNotContains( 'multiple', $html );
+			$this->assertStringNotContainsString( 'multiple', $html );
 			if ( empty( $value ) ) {
-				$this->assertNotContains( '" selected="selected">', $html );
+				$this->assertStringNotContainsString( '" selected="selected">', $html );
 			} else {
-				$this->assertContains( '<option value="' . $value . '" selected="selected">', $html );
+				$this->assertStringContainsString( '<option value="' . $value . '" selected="selected">', $html );
 			}
 		}
 	}
@@ -737,7 +739,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$instance_val = rand( $min, $max );
 
 		$id = uniqid();
-		$sut = $this->make_instance();
+		$sut = $this->getInstance();
 		$attr = [
 			'type'		=> 'taxonomy_select',
 			'id'		=> $id,
@@ -754,9 +756,9 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		/**
 		 * Multiple deve essere presente
 		 */
-		$this->assertContains( 'type="select"', $html );
-		$this->assertContains( 'multiple', $html );
-		$this->assertContains( 'value="' . $instance_val . '" selected="selected"', $html );
+		$this->assertStringContainsString( 'type="select"', $html );
+		$this->assertStringContainsString( 'multiple', $html );
+		$this->assertStringContainsString( 'value="' . $instance_val . '" selected="selected"', $html );
 
 
 		/**
@@ -768,7 +770,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
 		$html = $sut->render( $attr, $instance );
 
 		foreach ( $instance[ $id ] as $k => $v ) {
-			$this->assertContains( 'value="' . $v . '" selected="selected"', $html );
+			$this->assertStringContainsString( 'value="' . $v . '" selected="selected"', $html );
 		}
 	}
 
@@ -777,7 +779,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      */
     public function get_fields_input_output( $type = 'text', $tag = 'input' ) {
 
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
 
         $out = $sut->$tag(
             [],
@@ -869,7 +871,7 @@ class FieldsTest extends \Codeception\TestCase\WPTestCase
      * Get fields_type output
      */
     public function get_fields_type_output( $type = 'text' ) {
-        $sut = $this->make_instance();
+        $sut = $this->getInstance();
 
         // $fields_type = 'field_type_' . $type;
         $fields_type = $type;

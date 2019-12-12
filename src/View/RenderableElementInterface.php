@@ -11,4 +11,11 @@ interface RenderableElementInterface {
 	 * @return string
 	 */
 	public function render( array $attr );
+
+	/**
+	 * @param string $key
+	 * @param string $value
+	 * @return $this
+	 */
+	public function with( $key, $value );
 }

@@ -19,7 +19,7 @@ class ViewFactory {
 	 * View_Factory constructor.
 	 */
 	public function __construct() {
-		$this->types = require __DIR__ . '/../../config/types.php' ;
+		$this->types = require __DIR__ . '/../config/types.php' ;
 	}
 
 	/**
@@ -30,15 +30,13 @@ class ViewFactory {
 	 */
 	public function make( $type = 'text' ): RenderableElementInterface {
 
-		$search = \strtolower( $type );
+		$search = \strtolower( \strval( $type ) );
 
 		if ( isset( $this->types[ $search ] ) ) {
 			return new $this->types[ $search ];
 		} elseif ( \class_exists( $type ) ) {
 			$class = new $type();
-			// if ( $class instanceof Renderable_Element_Interface ) {
 			return $class;
-			// }
 		}
 
 		return new $this->types['text'];
