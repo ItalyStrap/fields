@@ -143,7 +143,7 @@ class Media extends Input {
 			return '';
 		}
 
-		$file = \file_get_contents( __DIR__ . '/../../assets/css/media.js' );
+		$file = \file_get_contents( __DIR__ . '/../../assets/css/media.css' );
 
 		$style = \sprintf(
 			'<style scoped>%s</style>',
