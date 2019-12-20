@@ -30,6 +30,8 @@ class Select extends AbstractView {
 			$count = \count( $attr['options'] );
 			$attr['size'] = isset( $attr['size'] ) ? $attr['size'] : ( $count >= 1 && $count <= 6 ? $count : 6 );
 			$attr['multiple'] = true;
+
+			$attr['id'] = $attr['name'] = $attr['id'] . '[]';
 		}
 
 		$attr['type'] = 'select';

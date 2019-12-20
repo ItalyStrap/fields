@@ -27,11 +27,16 @@ class Editor extends AbstractView {
 			'teeny' => true,
 		];
 
+		/**
+		 * @see do_shortcode()
+		 */
+		\preg_match( '@\[([^<>&/\[\]\x00-\x20=]++)@', $attr['id'], $matches );
+
 		\ob_start();
 
 		\wp_editor(
 			$attr['value'], // Content
-			$attr['id'],	// Editor ID
+			$matches[1] ?? $attr['id'], //$attr['id'],	// Editor ID
 			$settings		// Settings
 		);
 

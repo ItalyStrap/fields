@@ -167,6 +167,11 @@ class Fields implements FieldsInterface {
 	/**
 	 * Get value of the field
 	 *
+	 * If this class is used in Settings API or Widget API maybe
+	 * the $attr['id'] could be like this string "option-name[someKey]"
+	 * in this case `isset( $instance[ $attr['id'] ] )` fail
+	 * A better fallback is to set the expected value in `$attr['value']`
+	 *
 	 * @param  array $attr
 	 * @param  array $instance
 	 * @return string|int|bool

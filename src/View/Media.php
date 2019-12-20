@@ -45,7 +45,7 @@ class Media extends Input {
 		$html .= \ob_get_clean();
 
 		$class = \sprintf(
-			'%s button button-primary widefat',
+			'%s button button-primary',
 			$is_list ? 'upload_carousel_image_button' : 'upload_single_image_button'
 		);
 
