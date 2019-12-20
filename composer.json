@@ -1,7 +1,7 @@
 {
     "name": "italystrap/fields",
     "description": "Classes and functions for handling fields",
-    "type": "wordpress-plugin",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
