@@ -103,5 +103,5 @@ before_script:
   - codecept build
 
 script:
-  - composer check
+#  - composer check
   - codecept run wpunit && codecept run unit
