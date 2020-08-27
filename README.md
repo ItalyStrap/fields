@@ -47,6 +47,10 @@ This code is licensed under the [MIT](LICENSE).
 
 *  Maintained under the [Semantic Versioning Guide](http://semver.org)
 
+## Similar project
+
+ - [wp-fields](https://github.com/Chrico/wp-fields)
+
 ## Credits
 
 > TODO

@@ -23,6 +23,14 @@ class Select extends AbstractView {
 			$attr['options'] = [];
 		}
 
+		if ( ! isset( $attr['type'] ) ) {
+			$attr['type'] = '';
+		}
+
+		if ( empty( $attr['name'] ) ) {
+			throw new \InvalidArgumentException( '"name" value must not be empty' );
+		}
+
 		/**
 		 * @todo Check provvisorio
 		 */
@@ -31,7 +39,7 @@ class Select extends AbstractView {
 			$attr['size'] = isset( $attr['size'] ) ? $attr['size'] : ( $count >= 1 && $count <= 6 ? $count : 6 );
 			$attr['multiple'] = true;
 
-			$attr['id'] = $attr['name'] = $attr['id'] . '[]';
+			$attr['name'] .= '[]';
 		}
 
 		$attr['type'] = 'select';
