@@ -18,7 +18,7 @@
         "italystrap/config": "*"
     },
     "require-dev": {
-        "lucatume/wp-browser": "~2.2",
+        "lucatume/wp-browser": "2.2",
         "lucatume/function-mocker-le": "^1.0",
         "italystrap/debug": "*",
         "squizlabs/php_codesniffer": "^3.0",
